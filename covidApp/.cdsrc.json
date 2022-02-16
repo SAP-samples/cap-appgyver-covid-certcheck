@@ -1,0 +1,10 @@
+{
+    "requires": {
+        "auth": {
+            "kind": "jwt-auth"
+        },
+        "uaa": {
+            "kind": "xsuaa"
+        }
+    }
+}

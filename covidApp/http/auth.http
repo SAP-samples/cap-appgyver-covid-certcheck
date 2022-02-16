@@ -1,0 +1,35 @@
+@xsuaaUrl = https://covidapp-4l1ifcm7.authentication.eu10.hana.ondemand.com
+@xsuaaTokenEndpoint = /oauth/token
+@xsuaaClientId = sb-covidApp!t127663
+@xsuaaClientSecret = hUguf7pSKiRnhvFeWxCvHKZwqJM=
+@btpUserName = asdf.asdf@sap.com
+@btpUserPassword = asdf
+
+###
+
+# @name getIdToken
+POST {{xsuaaUrl}}{{xsuaaTokenEndpoint}} HTTP/1.1
+Authorization: Basic {{xsuaaClientId}}:{{xsuaaClientSecret}}
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password
+&username={{btpUserName}}
+&response_type=id_token
+&password={{btpUserPassword}}
+
+###
+
+@access_token = {{getIdToken.response.body.$.access_token}}
+
+# @name getAdminResults
+GET http://localhost:4004/admin/Authors
+Authorization: Bearer {{access_token}}
+
+
+###
+
+@access_token = {{getIdToken.response.body.$.access_token}}
+
+# @name getAuthUserResults
+GET http://localhost:4004/authenticated/Books
+Authorization: Bearer {{access_token}}

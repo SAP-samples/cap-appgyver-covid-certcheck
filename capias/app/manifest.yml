@@ -1,0 +1,14 @@
+# Generated manifest.yml based on template version 0.1.0
+# appName = capias-router
+# language=nodejs
+# multitenancy=false
+---
+applications:
+# -----------------------------------------------------------------------------------
+# Router Service
+# -----------------------------------------------------------------------------------
+- name: capias-router
+  path: ./
+  memory: 256M
+  buildpack: nodejs_buildpack
+

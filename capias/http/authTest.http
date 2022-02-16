@@ -1,0 +1,58 @@
+@iasHostname = saptfe.accounts.ondemand.com
+@xsuaaHostname = saptfe.accounts.ondemand.com
+@iasTokenEndpoint = /oauth2/token
+@iasClientId = ac0f8188-4b04-42bc-9298-3542ef061f5e
+@iasClientIdCovidApp = 22abc63d-a599-4d4b-9d2c-1753e109b6c4
+@iasUserName = asdf.asdf@sap.com
+@iasUserPassword = asdf
+
+
+###
+# !Approach using PKCE!
+###
+
+https://saptfe.accounts.ondemand.com/oauth2/authorize?client_id=22abc63d-a599-4d4b-9d2c-1753e109b6c4&scope=openid&code_challenge=fb_51UH4FUkmbMtp3m6tm8g-chC0diYg9o8_78fBj6k&code_challenge_method=S256&redirect_uri=http://localhost/&response_type=code&state=state
+
+###
+
+# @name getIasToken
+POST https://{{iasHostname}}{{iasTokenEndpoint}} HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+client_id=22abc63d-a599-4d4b-9d2c-1753e109b6c4
+&code=ac1b186e7b0527a44929ccbf4dffee70
+&redirect_uri=http://localhost/
+&grant_type=authorization_code
+&code_verifier=d7bd56b59f479d4a3ba72d4614fcd706b5976255ac9921d56bee22f1
+
+
+###
+
+@id_token = {{getIasToken.response.body.$.id_token}}
+
+# @name getCapResults
+GET http://localhost:4004/authenticated/Books
+Authorization: Bearer {{id_token}}
+
+
+###
+
+POST https://tfesecurity.authentication.eu10.hana.ondemand.com/oauth/token HTTP/1.1
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+client_id=sb-capias!t129168
+&client_secret=ZeG3TFX1dEDIPnaYoLGkKpEoQC0=
+&grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer
+&response_type=token+id_token
+&assertion={{id_token}}
+
+###
+# Not working via approuter - not required
+###
+
+@id_token = {{getIasToken.response.body.$.access_token}}
+
+# @name getAppRouterResults
+GET http://localhost:5001/admin/Books
+x-approuter-authorization: Bearer {{id_token}}
