@@ -25,6 +25,7 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: capias-db
+      - name: capias-uaa
   - name: capias-db-deployer
     type: hdb
     path: gen/db
