@@ -11,7 +11,6 @@ build-parameters:
       commands:
         - npm ci
         - npx -p @sap/cds-dk cds build --production
-
 modules:
   - name: capias-srv
     type: nodejs
@@ -24,3 +23,29 @@ modules:
       - name: srv-api # required by consumers of CAP services (e.g. approuter)
         properties:
           srv-url: ${default-url}
+    requires:
+      - name: capias-db
+  - name: capias-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: capias-db
+resources:
+  - name: capias-uaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: capias
+        tenant-mode: dedicated
+  - name: capias-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana # or 'hanatrial' on trial landscapes
+      service-plan: hdi-shared
+    properties:
+      hdi-service-name: ${service-name}

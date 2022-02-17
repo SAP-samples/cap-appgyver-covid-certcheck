@@ -8,7 +8,7 @@ applications:
 # Backend Service
 # -----------------------------------------------------------------------------------
 - name: capias-srv
-  random-route: true  # for development only
+  #random-route: true  # for development only
   path: gen/srv
   memory: 256M
   buildpack: nodejs_buildpack
