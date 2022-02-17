@@ -10,8 +10,8 @@ module.exports = cds.service.impl(function () {
     }
   });
   this.on(["READ"], "GenPkce", () => {
-    const verifier = base64URLEncode(crypto.randomBytes(32));
-    const challenge = base64URLEncode(sha256(verifier));
+    let verifier = base64URLEncode(crypto.randomBytes(32));
+    let challenge = base64URLEncode(sha256(verifier));
     return { code_challenge: challenge, code_verifier: verifier };
   });
 });
