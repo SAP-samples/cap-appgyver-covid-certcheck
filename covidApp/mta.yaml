@@ -11,7 +11,6 @@ build-parameters:
       commands:
         - npm ci
         - npx -p @sap/cds-dk cds build --production
-
 modules:
   - name: covidApp-srv
     type: nodejs
@@ -25,9 +24,8 @@ modules:
         properties:
           srv-url: ${default-url}
     requires:
-      - name: covidApp-uaa
       - name: covidApp-db
-
+      - name: covidApp-uaa
   - name: covidApp-db-deployer
     type: hdb
     path: gen/db
@@ -35,7 +33,6 @@ modules:
       buildpack: nodejs_buildpack
     requires:
       - name: covidApp-db
-
 resources:
   - name: covidApp-uaa
     type: org.cloudfoundry.managed-service
@@ -46,7 +43,6 @@ resources:
       config:
         xsappname: covidApp
         tenant-mode: dedicated
-
   - name: covidApp-db
     type: com.sap.xs.hdi-container
     parameters:

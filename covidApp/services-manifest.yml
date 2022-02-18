@@ -3,6 +3,10 @@
 ---
 create-services:
 # ------------------------------------------------------------
+  - name:   covidApp-db
+    broker: hana  # 'hanatrial' on trial landscapes
+    plan: "hdi-shared"
+# ------------------------------------------------------------
   - name:   covidApp-uaa
     broker: xsuaa
     plan: "broker"

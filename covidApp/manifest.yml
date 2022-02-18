@@ -13,5 +13,18 @@ applications:
   memory: 256M
   buildpack: nodejs_buildpack
   services:
+  - covidApp-db
   - covidApp-uaa
 
+# -----------------------------------------------------------------------------------
+# HANA Database Content Deployer App
+# -----------------------------------------------------------------------------------
+- name: covidApp-db-deployer
+  path: gen/db
+  no-route: true
+  health-check-type: process
+  memory: 256M
+  instances: 1
+  buildpack: nodejs_buildpack
+  services:
+  - covidApp-db

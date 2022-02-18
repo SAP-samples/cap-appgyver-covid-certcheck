@@ -1,10 +1,20 @@
 {
     "requires": {
-        "auth": {
-            "kind": "jwt-auth"
-        },
-        "uaa": {
-            "kind": "xsuaa"
+        "[production]": {
+            "auth": {
+                "kind": "jwt-auth"
+            },
+            "uaa": {
+                "kind": "xsuaa"
+            },
+            "db": {
+                "kind": "hana"
+            }
+        }
+    },
+    "hana": {
+        "[production]": {
+            "deploy-format": "hdbtable"
         }
     }
 }

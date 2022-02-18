@@ -5,15 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": " Debug: Attach to Node Process",
-      "type": "node",
-      "request": "attach",
-      "processId": "${command:PickProcess}",
-      "skipFiles": ["<node_internals>/**"]
-    },
-    {
       "command": "cds run --with-mocks --in-memory?",
       "name": "cds run",
+      "request": "launch",
+      "type": "node-terminal",
+      "skipFiles": [ "<node_internals>/**" ]
+    },
+    {
+      "command": "cds bind --exec -- npm.cmd start --prefix app",
+      "name": "cds bind",
       "request": "launch",
       "type": "node-terminal",
       "skipFiles": [ "<node_internals>/**" ]

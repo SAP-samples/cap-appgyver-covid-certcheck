@@ -1,29 +1,24 @@
 {
   "xsappname": "covidApp",
   "tenant-mode": "dedicated",
-  "scopes": [
-    {
-      "name": "$XSAPPNAME.admin",
-      "description": "admin"
-    }
-  ],
+  "scopes": [{
+    "name": "$XSAPPNAME.admin",
+    "description": "admin"
+  }],
   "attributes": [],
-  "role-templates": [
-    {
-      "name": "admin",
-      "description": "Admin Role",
-      "scope-references": [
-        "$XSAPPNAME.admin"
-      ],
-      "attribute-references": []
-    }
-  ],
+  "role-templates": [{
+    "name": "admin",
+    "description": "generated",
+    "scope-references": [
+      "$XSAPPNAME.admin"
+    ],
+    "attribute-references": []
+  }],
   "oauth2-configuration": {
     "redirect-uris": [
-      "https://technical-field-enablement-covidapp-4l1ifcm7-dev-capias-srv.cfapps.eu10.hana.ondemand.com/",
       "http://localhost:5001/",
-      "https://localhost",
-      "http://localhost"
+      "https://technical-field-enablement-covidapp-4l1ifcm7-*.cfapps.eu10.hana.ondemand.com/",
+      "https://localhost/"
     ]
   }
 }
