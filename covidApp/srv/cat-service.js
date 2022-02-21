@@ -1,7 +1,10 @@
 const cds = require("@sap/cds");
 const crypto = require("crypto");
+const Verifier = require('../lib/CovidCertificateVerifier.js')
+
 
 module.exports = cds.service.impl(function () {
+
   this.on(["READ"], "Books", async (req) => {
     if (req.user.is("admin")) {
       return await SELECT.one("Books").where({ ID: 1 });
