@@ -155,4 +155,6 @@ class CovidCertificateVerifier {
 
 }
 
+module.exports = CovidCertificateVerifier
+
 

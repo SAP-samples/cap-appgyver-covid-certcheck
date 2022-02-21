@@ -21,6 +21,7 @@
     "node-fetch": "2.6.1",
     "pako": "^2.0.4",
     "passport": "^0.5.2",
+    "sqlite3": "^5.0.2",
     "zlib": "^1.0.5"
   },
   "devDependencies": {

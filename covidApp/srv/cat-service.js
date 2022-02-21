@@ -1,6 +1,6 @@
 const cds = require("@sap/cds");
 const crypto = require("crypto");
-const Verifier = require('../lib/CovidCertificateVerifier.js')
+const CovidCertificateVerifier = require('../lib/CovidCertificateVerifier.js')
 
 
 module.exports = cds.service.impl(function () {
@@ -17,6 +17,12 @@ module.exports = cds.service.impl(function () {
     let challenge = base64URLEncode(sha256(verifier));
     return { code_challenge: challenge, code_verifier: verifier };
   });
+
+  this.on("decodeCertificateString", req => {
+    let verifier = new CovidCertificateVerifier()
+    console.log("here's my string:")
+    console.log(req.data)
+  })
 });
 
 function base64URLEncode(str) {
