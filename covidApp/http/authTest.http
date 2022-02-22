@@ -6,7 +6,7 @@
 @codeVerifier = L6Fglaw13U76NKjVmKV5JcnSiD6fhOzOvIzRQKnQOFM
 @btpXsuaaClient = sb-covidApp!t127663
 @btpXsuaaSecret = hUguf7pSKiRnhvFeWxCvHKZwqJM=
-@capEndpoint = https://technical-field-enablement-covidapp-4l1ifcm7-dev-covidapp-srv.cfapps.eu10.hana.ondemand.com
+@capEndpoint = http://localhost:4004
 
 ###
 # !Approach using PKCE!
@@ -46,6 +46,9 @@ client_id={{capiasClientId}}
 
 # @name getCapResults
 GET {{capEndpoint}}/authenticated/Books
+Authorization: Bearer {{id_token}}
+### 
+GET {{capEndpoint}}/verification/decodeCertificateString(certificateString='TEST')
 Authorization: Bearer {{id_token}}
 
 

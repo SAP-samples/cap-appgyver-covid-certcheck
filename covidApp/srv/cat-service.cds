@@ -18,3 +18,9 @@ service PkceService @(_requires : 'authenticated-user') {
             pkce_code.code_verifier  as code_verifier
         };
 }
+
+service VerificationService @(_requires : 'authenticated-user') {
+
+    function decodeCertificateString(certificateString : String) returns String
+
+}

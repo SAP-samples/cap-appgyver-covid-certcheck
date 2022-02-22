@@ -12,8 +12,8 @@
       "skipFiles": [ "<node_internals>/**" ]
     },
     {
-      "command": "cds bind --exec -- npm.cmd start --prefix app",
-      "name": "cds bind",
+      "command": "cds watch --profile hybrid",
+      "name": "cds watch hybrid",
       "request": "launch",
       "type": "node-terminal",
       "skipFiles": [ "<node_internals>/**" ]
