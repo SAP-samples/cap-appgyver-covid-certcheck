@@ -1,9 +1,15 @@
 const cds = require("@sap/cds");
 const crypto = require("crypto");
 const CovidCertificateVerifier = require('../lib/CovidCertificateVerifier.js')
+const CertificateVerificationException = require('../lib/CertificateVerificationException')
 
 
 module.exports = cds.service.impl(function () {
+  let verifier
+  cds.once('served', async () => {
+    verifier = new CovidCertificateVerifier()
+    await verifier.init()
+  })
 
   this.on(["READ"], "Books", async (req) => {
     if (req.user.is("admin")) {
@@ -18,10 +24,30 @@ module.exports = cds.service.impl(function () {
     return { code_challenge: challenge, code_verifier: verifier };
   });
 
-  this.on("decodeCertificateString", req => {
-    let verifier = new CovidCertificateVerifier()
-    console.log("here's my string:")
-    console.log(req.data)
+  this.on("decodeCertificateString", async req => {
+
+    try {
+      result = await verifier.checkCertificate(req.data.certificateString, 'DE')
+    } catch (error) {
+      if (error instanceof CertificateVerificationException) {
+        req.error({
+          code: 'FUNCTIONALERROR',
+          message: error.toString(),
+          target: 'certificateString',
+          status: 418
+        })
+        return
+      } else {
+        req.error({
+          code: 'TECHNICALERROR',
+          message: error.toString(),
+          target: 'certificateString',
+          status: 419
+        })
+      }
+    }
+
+    return result
   })
 });
 

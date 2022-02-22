@@ -3,3 +3,5 @@ class CertificateVerificationException extends Error {
         super(message);
     }
 }
+
+module.exports = CertificateVerificationException

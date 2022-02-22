@@ -7,7 +7,7 @@ const rs = require('jsrsasign');
 const cose = require('cose-js');
 const x509 = require('@fidm/x509')
 const certLogicJs = require('certlogic-js');
-
+const CertificateVerificationException = require('../lib/CertificateVerificationException')
 class CovidCertificateVerifier {
 
     keysURL = 'https://de.dscg.ubirch.com/trustList/DSC/'
@@ -31,7 +31,17 @@ class CovidCertificateVerifier {
         const base45data = certificateString.slice(4)
 
         const decodedb45 = base45.decode(base45data)
-        const coseRaw = Pako.inflate(decodedb45)
+        if (decodedb45.length == 0) {
+            console.error("cannot base45decode string")
+            throw new CertificateVerificationException("certificate not valid yet")
+        }
+
+        const coseRaw = pako.inflate(decodedb45)
+        if (!coseRaw) {
+            console.error("cannot inflate string")
+            throw new CertificateVerificationException("certificate not valid yet")
+        }
+
         const message = cbor.decodeFirstSync(coseRaw)
         const [protected_header, unprotected_header, cbor_data, signature] = message.value
 
@@ -85,12 +95,6 @@ class CovidCertificateVerifier {
         })
     }
 
-
-
-    printJSON() {
-        console.log(this.certificate);
-    }
-
     async loadKeys() {
         const response = await fetch(this.keysURL);
         const certWithChecksum = await response.text();
@@ -98,7 +102,7 @@ class CovidCertificateVerifier {
         this.keys = JSON.parse(certWithoutChecksum).certificates
     }
 
-    async loadBusinessRules(country) {
+    async loadBusinessRules() {
 
         //url as a property in the mta.yaml
         let response = await fetch(this.rulesURL);

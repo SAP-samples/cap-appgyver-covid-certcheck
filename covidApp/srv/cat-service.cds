@@ -21,6 +21,6 @@ service PkceService @(_requires : 'authenticated-user') {
 
 service VerificationService @(_requires : 'authenticated-user') {
 
-    function decodeCertificateString(certificateString : String) returns String
+    action decodeCertificateString(certificateString : String) returns String
 
 }
