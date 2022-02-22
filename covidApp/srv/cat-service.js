@@ -36,7 +36,6 @@ module.exports = cds.service.impl(function () {
           target: 'certificateString',
           status: 418
         })
-        return
       } else {
         req.error({
           code: 'TECHNICALERROR',
@@ -44,6 +43,7 @@ module.exports = cds.service.impl(function () {
           target: 'certificateString',
           status: 419
         })
+        return
       }
     }
 
