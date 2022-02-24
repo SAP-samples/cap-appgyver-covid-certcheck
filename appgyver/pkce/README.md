@@ -46,7 +46,9 @@
        ![HTTP request flow function](images/3-http-req.png)
 
      7.  Configure each node as follows:
+
          1.  Add a JavaScript function and connect it to the Component onLocationChange event. Double-click it to open the JS editor and fill the required sections:
+
              1. input1: Output Value of another node > Receive event / Event Object
              2. ```
                  if(inputs.input1.url.includes('localhost/?code')){
@@ -56,11 +58,14 @@
                  return { codeAvailable: false } 
                  }
                 ```
-             1. Output 1 properties:
+             3. Output 1 properties:
                 1. code (text)
                 2. codeAvailable (text)
+
              ![JS code](images/4-js-code.png)
-             
+
+             **The javascript above parses the response body returned by the authorize endpoint and adds the code and a boolean to the output of the node**
+
          1.  If condition > Output Value of another node > Function > codeAvailable
          2.  Set app variable:
              1.  Variable name > auth.authCode
