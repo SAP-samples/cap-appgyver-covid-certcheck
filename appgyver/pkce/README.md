@@ -49,12 +49,12 @@
          1.  Add a JavaScript function and connect it to the Component onLocationChange event. Double-click it to open the JS editor and fill the required sections:
              1. input1: Output Value of another node > Receive event / Event Object
              2. ```
-                    if(inputs.input1.url.includes('localhost/?code')){
-                    var code = inputs.input1.url.split('code=')[1].split('&state')[0];
-                    return { code : code, codeAvailable: true } 
-                    }else{
-                    return { codeAvailable: false } 
-                    }
+                 if(inputs.input1.url.includes('localhost/?code')){
+                 var code = inputs.input1.url.split('code=')[1].split('&state')[0];
+                 return { code : code, codeAvailable: true } 
+                 }else{
+                 return { codeAvailable: false } 
+                 }
                 ```
              1. Output 1 properties:
                 1. code (text)
