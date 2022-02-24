@@ -40,42 +40,44 @@
            ![Auth application variable](./images/2-auth-object.png)
         
      4.  Save the app and go back to OAuth screen view
-     5.  Select the WebView component and expand the logic modeling screen from the bottom
-     6.  Install the HTTP request component from the flow function market
+  2.  Select the WebView component and expand the logic modeling screen from the bottom
+  3.  Install the HTTP request component from the flow function market
 
        ![HTTP request flow function](images/3-http-req.png)
 
-     7.  Configure each node as follows:
+  4.  Configure each node as follows:
 
-         1.  Add a JavaScript function and connect it to the Component onLocationChange event. Double-click it to open the JS editor and fill the required sections:
+     1.  Add a JavaScript function and connect it to the Component onLocationChange event. Double-click it to open the JS editor and fill the required sections:
 
-             1. input1: Output Value of another node > Receive event / Event Object
-             2. ```
-                 if(inputs.input1.url.includes('localhost/?code')){
-                 var code = inputs.input1.url.split('code=')[1].split('&state')[0];
-                 return { code : code, codeAvailable: true } 
-                 }else{
-                 return { codeAvailable: false } 
-                 }
-                ```
-             3. Output 1 properties:
-                1. code (text)
-                2. codeAvailable (text)
+         1. input1: Output Value of another node > Receive event / Event Object
+         2. ```
+            if(inputs.input1.url.includes('localhost/?code')){
+            var code = inputs.input1.url.split('code=')[1].split('&state')[0];
+            return { code : code, codeAvailable: true } 
+            }else{
+            return { codeAvailable: false } 
+            }
+            ```
+         3. Output 1 properties:
+             1. code (text)
+             2. codeAvailable (text)
 
              ![JS code](images/4-js-code.png)
 
-             **The javascript above parses the response body returned by the authorize endpoint and adds the code and a boolean to the output of the node**
+         **The javascript above parses the response body returned by the authorize endpoint and adds the code and a boolean to the output of the node**
 
              4. Save and exit the JS editor 
 
-         2.  Add an If condition > Output Value of another node > Function > codeAvailable
+         2.  Add an If condition and connect it to the output node of the JS > Output Value of another node > Function > codeAvailable
 
              ![If condition](images/5-if-condition.png)
 
-         3.  Set app variable:
+         3.  Add a **Set app variable** function, connect it to the 1st node of the if condition which is triggered on a truthy result and configure it:
+
              1.  Variable name > auth.authCode
              2.  Assigned value > Output value of another node > Function > code
-         4.  HTTP Request:
+
+         4.  Add an HTTP Request and connect it to the output node of the Set app variable function:
              1.  URL > https://awhs090l4.accounts400.ondemand.com/oauth2/token
              2.  HTTP Method > POST
              3.  Headers > Custom List:
