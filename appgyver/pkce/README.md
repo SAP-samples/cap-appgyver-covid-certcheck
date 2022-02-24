@@ -66,11 +66,16 @@
 
              **The javascript above parses the response body returned by the authorize endpoint and adds the code and a boolean to the output of the node**
 
-         1.  If condition > Output Value of another node > Function > codeAvailable
-         2.  Set app variable:
+             4. Save and exit the JS editor 
+
+         2.  Add an If condition > Output Value of another node > Function > codeAvailable
+
+             ![If condition](images/5-if-condition.png)
+
+         3.  Set app variable:
              1.  Variable name > auth.authCode
              2.  Assigned value > Output value of another node > Function > code
-         3.  HTTP Request:
+         4.  HTTP Request:
              1.  URL > https://awhs090l4.accounts400.ondemand.com/oauth2/token
              2.  HTTP Method > POST
              3.  Headers > Custom List:
@@ -80,10 +85,10 @@
                  4.  Value: Basic ZjA2ZTA5NTYtMzdlNy00MThjLWE1YjItOGM1ODY0NDYxZDQwOlBZTFpDN0lZNHlyX0FFRUJMaFd2VHRSX11zZmlZag==
              4.  Request Body > Formula > {"grant_type": "authorization_code", "code": appVars.auth.authCode, "redirect_uri": "https://localhost", "client_id": "f06e0956-37e7-418c-a5b2-8c5864461d40"}
              5.  Request Body Type > x-www-form-urlencoded
-         4.  Alert > Formula > ENCODE_JSON(outputs["HTTP request"].error)
-         5.  Last 4 Set app variable components:
+         5.  Alert > Formula > ENCODE_JSON(outputs["HTTP request"].error)
+         6.  Last 4 Set app variable components:
              1.  auth.authToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.access_token)
              2.  auth.refreshToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.refresh_token)
              3.  auth.idToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.id_token)
              4.  auth.expiresIn > Formula > STRING(outputs["HTTP request"].resBodyParsed.expires_in)
-     1.  Save the app before continuing
+     8.  Save the app before continuing
