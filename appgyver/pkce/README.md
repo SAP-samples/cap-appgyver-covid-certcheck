@@ -44,12 +44,16 @@
      6.  Install the HTTP request component from the flow function market
 
        ![HTTP request flow function](images/3-http-req.png)
-       
-     7.  Configure the component logic as below:
-     8.  Configure each node as follows:
-         1.  JS
+
+     7.  Configure each node as follows:
+         1.  Add a JavaScript function and connect it to the Component onLocationChange event. Double-click it to open the JS editor and fill the required sections:
              1. input1: Output Value of another node > Receive event / Event Object
-             2. JavaScript:
+             2. ```if(inputs.input1.url.includes('localhost/?code')){
+  var code = inputs.input1.url.split('code=')[1].split('&state')[0];
+  return { code : code, codeAvailable: true } 
+}else{
+  return { codeAvailable: false } 
+}```
              3. Output 1 properties:
                 1. code (text)
                 2. codeAvailable (text)
@@ -73,4 +77,4 @@
              2.  auth.refreshToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.refresh_token)
              3.  auth.idToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.id_token)
              4.  auth.expiresIn > Formula > STRING(outputs["HTTP request"].resBodyParsed.expires_in)
-     9.  Save the app before continuing
+     8.  Save the app before continuing
