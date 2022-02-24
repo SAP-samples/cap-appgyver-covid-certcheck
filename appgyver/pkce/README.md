@@ -73,7 +73,7 @@
              ![JS code](images/4-js-code.png)
 
       **The javascript above parses the response body returned by the authorize endpoint and adds the code and a boolean to the output of the node**
-      
+
       1.  Add an If condition and connect it to the output node of the JS > Output Value of another node > Function > codeAvailable
 
         ![If condition](images/5-if-condition.png)
@@ -82,19 +82,21 @@
       4.  Assigned value > Output value of another node > Function > code
 
       5.  Add an HTTP Request and connect it to the output node of the Set app variable function:
-          1.  URL > https://awhs090l4.accounts400.ondemand.com/oauth2/token
+          1.  URL > "https://**ias tenant**.accounts.ondemand.com/oauth2/token?grant_type=authorization_code&client_id=**public client id**&code="+outputs["Function"].code+"&redirect_uri=http://localhost/&code_verifier="+pageVars.code_verifier
           2.  HTTP Method > POST
           3.  Headers > Custom List:
               1.  Header: Content-Type  
               2.  Value: application/x-www-form-urlencoded
-              3.  Header: Authorization
-              4.  Value: Basic ZjA2ZTA5NTYtMzdlNy00MThjLWE1YjItOGM1ODY0NDYxZDQwOlBZTFpDN0lZNHlyX0FFRUJMaFd2VHRSX11zZmlZag==
-          4.  Request Body > Formula > {"grant_type": "authorization_code", "code": appVars.auth.authCode, "redirect_uri": "https://localhost", "client_id": "f06e0956-37e7-418c-a5b2-8c5864461d40"}
-          5.  Request Body Type > x-www-form-urlencoded
-      6.  Alert > Formula > ENCODE_JSON(outputs["HTTP request"].error)
-      7.  Last 4 Set app variable components:
+          4.  Request Body Type > x-www-form-urlencoded
+
+              ![HTTP request props](images/8-http-post.png)
+
+      6.  Add a Dismiss initial view component and connect it to the same output from Set app variable
+      7.  Add another Set app variable component, connect it to the 1st output from the HTTP request, and clone it 3 times. Set the variable names and assigned values as below:
           1.  auth.authToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.access_token)
           2.  auth.refreshToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.refresh_token)
           3.  auth.idToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.id_token)
           4.  auth.expiresIn > Formula > STRING(outputs["HTTP request"].resBodyParsed.expires_in)
-  8.  Save the app before continuing
+  8.  Save the app before continuing and check that your logic flow looks something like this:
+      
+      ![Logic flow WebView](images/9-webview-logic.png)
