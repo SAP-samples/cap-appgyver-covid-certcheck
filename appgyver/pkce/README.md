@@ -100,3 +100,28 @@
   8.  Save the app before continuing and check that your logic flow looks something like this:
       
       ![Logic flow WebView](images/9-webview-logic.png)
+
+## PKCE implementation
+
+    It is now necessary to add logic at the page layout level that generates the code challenge and verifier needed for the PKCE flow. Because the JavaScript runs in the local device browser, it doesn't meet the criteria for a straightforward implementation of crypto.subtle. You can find polyfill JavaScript in this repository that will enable the implementation.
+
+    1.  Select the **Page Layout** component from the tree
+    2.  Expand the logic modeler, add a JavaScript component to the canvas, and connect it to the Page mounted event
+    3.  Double-click the JS component and paste the code from [pkceCoding.js](./pkceCoding.js) into the JavaScript pane
+    4.  Add a property called **verifier** and another called **challenge** to Output 1. Set the value types to Text and click update.
+
+        ![Polyfill JS](images/10-polyfill-js.png)
+
+    5. Add a Set page variable component and connect it to the output of the JS node
+    6. Set the variable name to code_verifier and assign the value **Function / verifier**
+
+        ![Function / verifier](./images/11-functionverifier.png)
+
+    7. Add another Set page variable component and connect it to the JS output node as well
+    8. Set the variable name to auth_with_pkce and set the value to a formula. Use the following dynamic URL syntax, disregard any validation errors related to web-url types and save:
+
+        "https://**ias tenant**.accounts.ondemand.com/oauth2/authorize?client_id=**public client id**&scope=openid&code_challenge="+outputs["Function"].challenge+"&code_challenge_method=S256&redirect_uri=http://localhost/&response_type=code"
+
+    9. Your flow logic should look similar to the image below. Save the application before proceeding.
+
+        ![PKCE flow logic](images/12-pkce-flow.png)

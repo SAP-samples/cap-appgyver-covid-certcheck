@@ -39,9 +39,6 @@ function btoa(input){
     return output;
 }
 
-
-
-
 /**
 *
 *  Secure Hash Algorithm (SHA256)
