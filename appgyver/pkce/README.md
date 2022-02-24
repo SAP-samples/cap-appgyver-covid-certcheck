@@ -47,27 +47,26 @@
  
   4.  Configure each node as follows:
       1.  Add a JavaScript function and connect it to the Component onLocationChange event. Double-click it to open the JS editor and fill the required sections:
-        1. input1: Output Value of another node > Receive event / Event Object
-        2. ```
-            if(inputs.input1.url.includes('localhost/?code')){
-            var code = inputs.input1.url.split('code=')[1].split('&state')[0];
-            return { code : code, codeAvailable: true } 
-            }else{
-            return { codeAvailable: false } 
-            }
-          ```
-        3. Output 1 properties:
+          1.  input1: Output Value of another node > Receive event / Event Object
+          2.  ```
+              if(inputs.input1.url.includes('localhost/?code')){
+              var code = inputs.input1.url.split('code=')[1].split('&state')[0];
+              return { code : code, codeAvailable: true } 
+              }else{
+              return { codeAvailable: false } 
+              }
+              ```
+          3. Output 1 properties:
              1. code (text)
              2. codeAvailable (text)
 
              ![JS code](images/4-js-code.png)
 
       **The javascript above parses the response body returned by the authorize endpoint and adds the code and a boolean to the output of the node**
+      2.  Add an If condition and connect it to the output node of the JS > Output Value of another node > Function > codeAvailable
 
-     5.  Add an If condition and connect it to the output node of the JS > Output Value of another node > Function > codeAvailable
-
-          ![If condition](images/5-if-condition.png)
-  5.  Add a **Set app variable** function, connect it to the 1st node of the if condition which is triggered on a truthy result and configure it:
+        ![If condition](images/5-if-condition.png)
+  5.  Add a **Set app variable** function, connect it to the 1st node of the if condition, which is triggered on a truthy result, and configure it:
 
              1.  Variable name > auth.authCode
              2.  Assigned value > Output value of another node > Function > code
@@ -88,4 +87,4 @@
              2.  auth.refreshToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.refresh_token)
              3.  auth.idToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.id_token)
              4.  auth.expiresIn > Formula > STRING(outputs["HTTP request"].resBodyParsed.expires_in)
-     6.  Save the app before continuing
+     5.  Save the app before continuing
