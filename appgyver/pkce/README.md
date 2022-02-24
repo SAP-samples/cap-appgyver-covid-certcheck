@@ -142,3 +142,9 @@
 4. Access the Token page, update the title, and add some text fields to hold the remaining properties, refresh token, expires in, and id token.
 
     ![Token screen](images/15-token-screen.png)
+
+5. Save the app if you haven't recently and select the launch option. You will need to install the SAP AppGyver app from the Apple App Store to take the next steps.
+6. Click reveal QR code under Mobile Apps and scan it from the SAP AppGyver app
+7. Enter your logon credentials for the IAS tenant. The process should look something like the below quick demo.
+
+    ![Auth demo flow](images/AuthAnimated.gif)
