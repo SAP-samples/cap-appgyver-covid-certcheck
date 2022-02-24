@@ -147,4 +147,4 @@
 6. Click reveal QR code under Mobile Apps and scan it from the SAP AppGyver app
 7. Enter your logon credentials for the IAS tenant. The process should look something like the below quick demo.
 
-    ![Auth demo flow](images/AuthAnimated.gif)
+    ![Auth demo flow](images/AuthAnimated15.gif)
