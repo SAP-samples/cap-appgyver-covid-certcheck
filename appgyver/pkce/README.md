@@ -48,20 +48,22 @@
      7.  Configure each node as follows:
          1.  Add a JavaScript function and connect it to the Component onLocationChange event. Double-click it to open the JS editor and fill the required sections:
              1. input1: Output Value of another node > Receive event / Event Object
-             2. ```if(inputs.input1.url.includes('localhost/?code')){
-  var code = inputs.input1.url.split('code=')[1].split('&state')[0];
-  return { code : code, codeAvailable: true } 
-}else{
-  return { codeAvailable: false } 
-}```
-             3. Output 1 properties:
+             2. ```
+                    if(inputs.input1.url.includes('localhost/?code')){
+                    var code = inputs.input1.url.split('code=')[1].split('&state')[0];
+                    return { code : code, codeAvailable: true } 
+                    }else{
+                    return { codeAvailable: false } 
+                    }
+                ```
+             1. Output 1 properties:
                 1. code (text)
                 2. codeAvailable (text)
-         2.  If condition > Output Value of another node > Function > codeAvailable
-         3.  Set app variable:
+         1.  If condition > Output Value of another node > Function > codeAvailable
+         2.  Set app variable:
              1.  Variable name > auth.authCode
              2.  Assigned value > Output value of another node > Function > code
-         4.  HTTP Request:
+         3.  HTTP Request:
              1.  URL > https://awhs090l4.accounts400.ondemand.com/oauth2/token
              2.  HTTP Method > POST
              3.  Headers > Custom List:
@@ -71,10 +73,10 @@
                  4.  Value: Basic ZjA2ZTA5NTYtMzdlNy00MThjLWE1YjItOGM1ODY0NDYxZDQwOlBZTFpDN0lZNHlyX0FFRUJMaFd2VHRSX11zZmlZag==
              4.  Request Body > Formula > {"grant_type": "authorization_code", "code": appVars.auth.authCode, "redirect_uri": "https://localhost", "client_id": "f06e0956-37e7-418c-a5b2-8c5864461d40"}
              5.  Request Body Type > x-www-form-urlencoded
-         5.  Alert > Formula > ENCODE_JSON(outputs["HTTP request"].error)
-         6.  Last 4 Set app variable components:
+         4.  Alert > Formula > ENCODE_JSON(outputs["HTTP request"].error)
+         5.  Last 4 Set app variable components:
              1.  auth.authToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.access_token)
              2.  auth.refreshToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.refresh_token)
              3.  auth.idToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.id_token)
              4.  auth.expiresIn > Formula > STRING(outputs["HTTP request"].resBodyParsed.expires_in)
-     8.  Save the app before continuing
+     1.  Save the app before continuing
