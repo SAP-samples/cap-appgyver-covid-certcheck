@@ -45,12 +45,17 @@
 
        ![PKCE page variables](images/6-page-vars.png)
 
-  3.  Select the WebView component and expand the logic modeling screen from the bottom
-  4.  Install the HTTP request component from the flow function market
+  3.  Save the application and click back to the **VIEW** screen
+  4.  Update the URL field of the WebView component to the newly created **auth_with_pkce** page variable
+
+       ![WebView URL](images/7-auth-with-pkce.png)
+
+  5.  Select the WebView component and expand the logic modeling screen from the bottom
+  6.  Install the HTTP request component from the flow function market
 
        ![HTTP request flow function](images/3-http-req.png)
  
-  5.  Configure each node as follows:
+  7.  Configure each node as follows:
       1.  Add a JavaScript function and connect it to the Component onLocationChange event. Double-click it to open the JS editor and fill the required sections:
           1.  input1: Output Value of another node > Receive event / Event Object
           2.  ```
@@ -71,11 +76,11 @@
       1.  Add an If condition and connect it to the output node of the JS > Output Value of another node > Function > codeAvailable
 
         ![If condition](images/5-if-condition.png)
-  6.  Add a **Set app variable** function, connect it to the 1st node of the if condition, which is triggered on a truthy result, and configure it:
+  8.  Add a **Set app variable** function, connect it to the 1st node of the if condition, which is triggered on a truthy result, and configure it:
       1.  Variable name > auth.authCode
       2.  Assigned value > Output value of another node > Function > code
 
-  7.  Add an HTTP Request and connect it to the output node of the Set app variable function:
+  9.  Add an HTTP Request and connect it to the output node of the Set app variable function:
       1.  URL > https://awhs090l4.accounts400.ondemand.com/oauth2/token
       2.  HTTP Method > POST
       3.  Headers > Custom List:
@@ -85,10 +90,10 @@
           4.  Value: Basic ZjA2ZTA5NTYtMzdlNy00MThjLWE1YjItOGM1ODY0NDYxZDQwOlBZTFpDN0lZNHlyX0FFRUJMaFd2VHRSX11zZmlZag==
       4.  Request Body > Formula > {"grant_type": "authorization_code", "code": appVars.auth.authCode, "redirect_uri": "https://localhost", "client_id": "f06e0956-37e7-418c-a5b2-8c5864461d40"}
       5.  Request Body Type > x-www-form-urlencoded
-  8.  Alert > Formula > ENCODE_JSON(outputs["HTTP request"].error)
-  9.  Last 4 Set app variable components:
+  10. Alert > Formula > ENCODE_JSON(outputs["HTTP request"].error)
+  11. Last 4 Set app variable components:
       1.  auth.authToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.access_token)
       2.  auth.refreshToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.refresh_token)
       3.  auth.idToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.id_token)
       4.  auth.expiresIn > Formula > STRING(outputs["HTTP request"].resBodyParsed.expires_in)
-  10. Save the app before continuing
+  12. Save the app before continuing
