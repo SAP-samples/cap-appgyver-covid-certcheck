@@ -46,7 +46,7 @@
        ![HTTP request flow function](images/3-http-req.png)
  
   4.  Configure each node as follows:
-    1. Add a JavaScript function and connect it to the Component onLocationChange event. Double-click it to open the JS editor and fill the required sections:
+      1.  Add a JavaScript function and connect it to the Component onLocationChange event. Double-click it to open the JS editor and fill the required sections:
         1. input1: Output Value of another node > Receive event / Event Object
         2. ```
             if(inputs.input1.url.includes('localhost/?code')){
