@@ -37,15 +37,20 @@
          4.  idToken (text)
          5.  refreshToken (text)
 
-           ![Auth application variable](./images/2-auth-object.png)
+       ![Auth application variable](./images/2-auth-object.png)
         
-     4.  Save the app and go back to OAuth screen view
-  2.  Select the WebView component and expand the logic modeling screen from the bottom
-  3.  Install the HTTP request component from the flow function market
+  2.  Add 2 Page variables to hold the PKCE relevant properties
+      1.  auth_with_pkce (web URL)
+      2.  code_verifier (text)
+
+       ![PKCE page variables](images/6-page-vars.png)
+
+  3.  Select the WebView component and expand the logic modeling screen from the bottom
+  4.  Install the HTTP request component from the flow function market
 
        ![HTTP request flow function](images/3-http-req.png)
  
-  4.  Configure each node as follows:
+  5.  Configure each node as follows:
       1.  Add a JavaScript function and connect it to the Component onLocationChange event. Double-click it to open the JS editor and fill the required sections:
           1.  input1: Output Value of another node > Receive event / Event Object
           2.  ```
@@ -63,14 +68,14 @@
              ![JS code](images/4-js-code.png)
 
       **The javascript above parses the response body returned by the authorize endpoint and adds the code and a boolean to the output of the node**
-      2.  Add an If condition and connect it to the output node of the JS > Output Value of another node > Function > codeAvailable
+      1.  Add an If condition and connect it to the output node of the JS > Output Value of another node > Function > codeAvailable
 
         ![If condition](images/5-if-condition.png)
-  5.  Add a **Set app variable** function, connect it to the 1st node of the if condition, which is triggered on a truthy result, and configure it:
+  6.  Add a **Set app variable** function, connect it to the 1st node of the if condition, which is triggered on a truthy result, and configure it:
       1.  Variable name > auth.authCode
       2.  Assigned value > Output value of another node > Function > code
 
-  6.  Add an HTTP Request and connect it to the output node of the Set app variable function:
+  7.  Add an HTTP Request and connect it to the output node of the Set app variable function:
       1.  URL > https://awhs090l4.accounts400.ondemand.com/oauth2/token
       2.  HTTP Method > POST
       3.  Headers > Custom List:
@@ -80,10 +85,10 @@
           4.  Value: Basic ZjA2ZTA5NTYtMzdlNy00MThjLWE1YjItOGM1ODY0NDYxZDQwOlBZTFpDN0lZNHlyX0FFRUJMaFd2VHRSX11zZmlZag==
       4.  Request Body > Formula > {"grant_type": "authorization_code", "code": appVars.auth.authCode, "redirect_uri": "https://localhost", "client_id": "f06e0956-37e7-418c-a5b2-8c5864461d40"}
       5.  Request Body Type > x-www-form-urlencoded
-  7.  Alert > Formula > ENCODE_JSON(outputs["HTTP request"].error)
-  8.  Last 4 Set app variable components:
+  8.  Alert > Formula > ENCODE_JSON(outputs["HTTP request"].error)
+  9.  Last 4 Set app variable components:
       1.  auth.authToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.access_token)
       2.  auth.refreshToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.refresh_token)
       3.  auth.idToken > Formula > STRING(outputs["HTTP request"].resBodyParsed.id_token)
       4.  auth.expiresIn > Formula > STRING(outputs["HTTP request"].resBodyParsed.expires_in)
-  9.  Save the app before continuing
+  10. Save the app before continuing
