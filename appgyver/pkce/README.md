@@ -125,3 +125,20 @@
 9. Your flow logic should look similar to the image below. Save the application before proceeding.
 
     ![PKCE flow logic](images/12-pkce-flow.png)
+
+## Add pages to display OAuth response and test
+
+  This is the perfect time to test the logic that you have implemented in the previous steps. First, let's add new AppGyver pages and enable navigation, so that we can see the OAuth response and corresponding properties.
+
+1. Click the page name **OAuth** in the top left corner under the application name. Add 2 new pages, Start and Token. Save the application.
+2. Select Navigation, add 2 items, and set the Label and Page values accordingly. Pick any icons that suit you. Make sure navigation is enabled, as below.
+
+    ![Navigation bar](images/13-navigation.png)
+
+3. Access the Start page, update the title, and add some text fields to hold the authentication code and access token values. Set the value rows to auth.authCode and auth.authToken respectively.
+
+    ![Start screen](./images/14-start-screen.png)
+
+4. Access the Token page, update the title, and add some text fields to hold the remaining properties, refresh token, expires in, and id token.
+
+    ![Token screen](images/15-token-screen.png)
