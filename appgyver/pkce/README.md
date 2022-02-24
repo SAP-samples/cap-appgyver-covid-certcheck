@@ -59,6 +59,8 @@
              1. Output 1 properties:
                 1. code (text)
                 2. codeAvailable (text)
+             ![JS code](images/4-js-code.png)
+             
          1.  If condition > Output Value of another node > Function > codeAvailable
          2.  Set app variable:
              1.  Variable name > auth.authCode
