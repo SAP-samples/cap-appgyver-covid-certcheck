@@ -103,7 +103,7 @@
 
 ## PKCE implementation
 
-    It is now necessary to add logic at the page layout level that generates the code challenge and verifier needed for the PKCE flow. Because the JavaScript runs in the local device browser, it doesn't meet the criteria for a straightforward implementation of crypto.subtle. You can find polyfill JavaScript in this repository that will enable the implementation.
+It is now necessary to add logic at the page layout level that generates the code challenge and verifier needed for the PKCE flow. Because the JavaScript runs in the local device browser, it doesn't meet the criteria for a straightforward implementation of crypto.subtle. You can find polyfill JavaScript in this repository that will enable the implementation.
 
     1.  Select the **Page Layout** component from the tree
     2.  Expand the logic modeler, add a JavaScript component to the canvas, and connect it to the Page mounted event
