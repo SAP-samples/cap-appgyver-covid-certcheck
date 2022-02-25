@@ -1,7 +1,7 @@
 const cds = require("@sap/cds");
 const crypto = require("crypto");
-const CovidCertificateVerifier = require('../lib/CovidCertificateVerifier.js')
-const CertificateVerificationException = require('../lib/CertificateVerificationException')
+const CovidCertificateVerifier = require('./lib/CovidCertificateVerifier.js')
+const CertificateVerificationException = require('./lib/CertificateVerificationException.js')
 
 
 module.exports = cds.service.impl(function () {
