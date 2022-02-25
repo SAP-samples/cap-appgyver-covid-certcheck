@@ -26,7 +26,7 @@ class CovidCertificateVerifier {
         await this.loadValueSets()
     }
 
-    async checkCertificate(certificateString, countryOfOffice) {
+    async checkCertificate(certificateString, countryOfOffice, date) {
 
         const base45data = certificateString.slice(4)
 
@@ -57,7 +57,7 @@ class CovidCertificateVerifier {
         const payload = cbor.decodeFirstSync(cbor_data)
 
         this.checkDates(payload)
-        this.executeRules(payload, countryOfOffice)
+        this.executeRules(payload, countryOfOffice, date)
         return payload.get(this.PAYLOAD).get(1)
     }
 
@@ -76,10 +76,10 @@ class CovidCertificateVerifier {
         if (endDate < today) throw new CertificateVerificationException("certificate not valid anymore")
     }
 
-    executeRules(payload, countryOfOffice) {
+    executeRules(payload, countryOfOffice, date) {
 
         let options = {
-            validationClock: new Date().toISOString(),
+            validationClock: date.toISOString(),
             valueSets: this.valueSets
         }
         let countryRules = this.ruleSetCountries.filter(rule => rule.Country == countryOfOffice)

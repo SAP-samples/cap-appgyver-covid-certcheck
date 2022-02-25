@@ -5,10 +5,12 @@ const CertificateVerificationException = require('../lib/CertificateVerification
 
 
 module.exports = cds.service.impl(function () {
-  let verifier
+
   cds.once('served', async () => {
-    verifier = new CovidCertificateVerifier()
-    await verifier.init()
+    if (!global.verifier) {
+      global.verifier = new CovidCertificateVerifier()
+      await global.verifier.init()
+    }
   })
 
   this.on(["READ"], "Books", async (req) => {
@@ -27,7 +29,7 @@ module.exports = cds.service.impl(function () {
   this.on("decodeCertificateString", async req => {
 
     try {
-      result = await verifier.checkCertificate(req.data.certificateString, 'DE')
+      result = await global.verifier.checkCertificate(req.data.certificateString, 'DE', new Date())
     } catch (error) {
       if (error instanceof CertificateVerificationException) {
         req.error({
@@ -45,9 +47,11 @@ module.exports = cds.service.impl(function () {
         })
         return
       }
+
     }
 
-    return result
+    let endDate = await checkValidityEnd(req)
+    return 'valid until ' + endDate
   })
 });
 
@@ -62,3 +66,32 @@ function base64URLEncode(str) {
 function sha256(buffer) {
   return crypto.createHash("sha256").update(buffer).digest();
 }
+
+async function checkValidityEnd(req) {
+  let checkDate = new Date()
+  let isValid = true
+
+  do {
+    checkDate = addDays(checkDate, 1)
+    try {
+      await global.verifier.checkCertificate(req.data.certificateString, 'DE', checkDate)
+    } catch (error) {
+      return subDays(checkDate, 1)
+    }
+
+  } while (isValid);
+}
+
+function addDays(date, days) {
+  var result = new Date(date)
+  result.setDate(result.getDate() + days)
+  return result;
+}
+
+function subDays(date, days) {
+  var result = new Date(date)
+  result.setDate(result.getDate() - days)
+  return result;
+}
+
+
