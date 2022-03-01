@@ -24,11 +24,7 @@ POST {{iasHostname}}{{iasTokenEndpoint}} HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
 
 client_id={{capiasClientId}}
-<<<<<<< HEAD
-&code=d409ea5aea6350d0d6b34c5bdb9d80c3
-=======
-&code=a695e80432e9d7d2fa49bfe1dc5b85eb
->>>>>>> be469f975b3a53c6d404a6e57aba2e571699a932
+&code=684d1b8f6fc97e29f98bee8ceb3b6005
 &redirect_uri=http://localhost/
 &grant_type=authorization_code
 &code_verifier={{codeVerifier}}
@@ -61,6 +57,13 @@ Accept: application/json
 Content-Type: application/json
 
 {"certificateString": "{{maxCertificate}}"}
+
+###
+
+GET {{capEndpoint}}/rest/verification/getAvailableCountries()
+Authorization: Bearer {{id_token}}
+Accept: application/json
+Content-Type: application/json
 
 ###
 

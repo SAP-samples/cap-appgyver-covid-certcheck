@@ -27,7 +27,6 @@ module.exports = cds.service.impl(function () {
   });
 
   this.on("decodeCertificateString", async req => {
-
     try {
       result = await global.verifier.checkCertificate(req.data.certificateString, 'DE', new Date())
     } catch (error) {
@@ -45,13 +44,16 @@ module.exports = cds.service.impl(function () {
           target: 'certificateString',
           status: 419
         })
-        return
+
       }
-
+      return
     }
-
     let endDate = await checkValidityEnd(req)
-    return 'valid until ' + endDate
+    return endDate.toString()
+  })
+
+  this.on("getAvailableCountries", async req => {
+    return global.verifier.availableCountries
   })
 });
 

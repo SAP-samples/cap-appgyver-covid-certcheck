@@ -41,7 +41,7 @@ cds.on('bootstrap', app => {
     .at(restURL + 'verification')
     .in(app)
     .catch((err) => {
-      app.logger.error(err);
+      console.log(err);
     })
 
 })

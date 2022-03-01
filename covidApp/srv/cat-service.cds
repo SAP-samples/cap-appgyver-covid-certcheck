@@ -21,6 +21,6 @@ service PkceService @(_requires : 'authenticated-user') {
 
 service VerificationService @(requires : 'authenticated-user') {
 
-    action decodeCertificateString(certificateString : String) returns String
-
+    action decodeCertificateString(certificateString : String) returns String;
+    function getAvailableCountries() returns array of String;
 }

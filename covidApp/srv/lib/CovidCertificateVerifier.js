@@ -15,6 +15,7 @@ class CovidCertificateVerifier {
     valueSetURL = 'https://distribution.dcc-rules.de/valuesets'
     keys = {}
     ruleSetCountries = new Array()
+    availableCountries = new Set()
     valueSets = new Object()
     EXPIRES_AT = 6
     ISSUED_AT = 4
@@ -112,6 +113,8 @@ class CovidCertificateVerifier {
         ruleSet.forEach(element => {
             ruleURLs.push(this.rulesURL + '/' + element.country + '/' + element.hash)
         });
+
+        this.availableCountries = [... new Set(ruleSet.map(rule => rule.country))]
 
         this.ruleSetCountries = await Promise.all(ruleURLs.map(async url => {
             const resp = await fetch(url);
