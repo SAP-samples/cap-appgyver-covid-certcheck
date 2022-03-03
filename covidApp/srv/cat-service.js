@@ -4,7 +4,9 @@ const CovidCertificateVerifier = require('./lib/CovidCertificateVerifier.js')
 const CertificateVerificationException = require('./lib/CertificateVerificationException.js')
 
 
-module.exports = cds.service.impl(function () {
+module.exports = cds.service.impl(async function () {
+
+
 
   cds.once('served', async () => {
     if (!global.verifier) {
@@ -49,6 +51,7 @@ module.exports = cds.service.impl(function () {
       return
     }
     let endDate = await checkValidityEnd(req)
+    persistValidationResult(req, result, endDate)
     return endDate.toString()
   })
 
@@ -63,6 +66,24 @@ function base64URLEncode(str) {
     .replace(/\+/g, "-")
     .replace(/\//g, "_")
     .replace(/=/g, "");
+}
+
+function persistValidationResult(req, result, endDate) {
+  const { Permissions } = cds.entities('covidcheck')
+  const tx = cds.tx(req)
+  try {
+    tx.run([
+      INSERT.into(Permissions).entries({
+        employeeID: req.req.authInfo.getLogonName(),
+        firstName: result.nam.gn,
+        lastName: result.nam.fn,
+        permissionUntil: endDate
+      })
+    ])
+  } catch (error) {
+    console.log(error)
+    req.error(error)
+  }
 }
 
 function sha256(buffer) {

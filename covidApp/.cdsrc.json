@@ -13,8 +13,6 @@
         }
     },
     "hana": {
-        "[production]": {
-            "deploy-format": "hdbtable"
-        }
+        "deploy-format": "hdbtable"
     }
 }
