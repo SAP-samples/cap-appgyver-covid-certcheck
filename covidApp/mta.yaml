@@ -139,3 +139,4 @@ build-parameters:
     commands:
     - npm ci
     - npx -p @sap/cds-dk cds build --production
+    - cp .cdsrc.json ./gen/srv

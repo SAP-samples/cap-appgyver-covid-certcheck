@@ -59,21 +59,5 @@
     },
     "sapux": [
         "app/covidcheck-ui"
-    ],
-    "cds": {
-        "requires": {
-            "auth": {
-                "kind": "jwt-auth"
-            },
-            "uaa": {
-                "kind": "xsuaa"
-            },
-            "db": {
-                "kind": "hana"
-            }
-        },
-        "hana": {
-            "deploy-format": "hdbtable"
-        }
-    }
+    ]
 }
