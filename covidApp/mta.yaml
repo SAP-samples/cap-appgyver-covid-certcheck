@@ -1,52 +1,100 @@
----
-_schema-version: '3.1'
+_schema-version: "3.1"
 ID: covidApp
+description: A simple AppGyver App.
 version: 1.0.0
-description: "A simple AppGyver App."
+modules:
+- name: covidApp-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: covidApp-db
+  - name: covidApp-uaa
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+  build-parameters:
+    builder: npm-ci
+- name: covidApp-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: covidApp-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: covidApp-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: covidApp-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - covidcheckcovidcheckui.zip
+      name: covidcheckcovidcheckui
+      target-path: resources/
+- name: covidcheckcovidcheckui
+  type: html5
+  path: app/covidcheck-ui
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: covidApp-uaa
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: dedicated
+      xsappname: covidApp
+    path: ./xs-security.json
+    service: xsuaa
+    service-plan: application
+- name: covidApp-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+  properties:
+    hdi-service-name: ${service-name}
+- name: covidApp-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: covidApp-html5-srv
+    service-plan: app-host
+- name: covidApp-dest-srv
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: false
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: covidApp-dest-srv
+    service-plan: lite
 parameters:
+  deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-    - builder: custom
-      commands:
-        - npm ci
-        - npx -p @sap/cds-dk cds build --production
-modules:
-  - name: covidApp-srv
-    type: nodejs
-    path: gen/srv
-    parameters:
-      buildpack: nodejs_buildpack
-    build-parameters:
-      builder: npm-ci
-    provides:
-      - name: srv-api # required by consumers of CAP services (e.g. approuter)
-        properties:
-          srv-url: ${default-url}
-    requires:
-      - name: covidApp-db
-      - name: covidApp-uaa
-  - name: covidApp-db-deployer
-    type: hdb
-    path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
-    requires:
-      - name: covidApp-db
-resources:
-  - name: covidApp-uaa
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: xsuaa
-      service-plan: application
-      path: ./xs-security.json
-      config:
-        xsappname: covidApp
-        tenant-mode: dedicated
-  - name: covidApp-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana # or 'hanatrial' on trial landscapes
-      service-plan: hdi-shared
-    properties:
-      hdi-service-name: ${service-name}
+  - builder: custom
+    commands:
+    - npm ci
+    - npx -p @sap/cds-dk cds build --production
