@@ -1,6 +1,5 @@
 {
     "requires": {
-        "[production]": {
             "auth": {
                 "kind": "jwt-auth"
             },
@@ -10,7 +9,6 @@
             "db": {
                 "kind": "hana"
             }
-        }
     },
     "hana": {
         "deploy-format": "hdbtable"

@@ -14,7 +14,7 @@
         "description": "{{appDescription}}",
         "dataSources": {
             "mainService": {
-                "uri": "/permissions/",
+                "uri": "srv-api/permissions/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "4.0"

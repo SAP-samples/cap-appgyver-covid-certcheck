@@ -29,7 +29,7 @@
     "redirect-uris": [
       "http://localhost:5001/",
       "https://technical-field-enablement-covidapp-4l1ifcm7-*.cfapps.eu10.hana.ondemand.com/",
-      "https://localhost/"^x
+      "https://localhost/"
     ]
   }
 }

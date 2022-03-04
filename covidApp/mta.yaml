@@ -117,17 +117,19 @@ resources:
       init_data:
         instance:
           destinations:
-          - Authentication: NoAuthentication
-            Name: ui5
-            ProxyType: Internet
-            Type: HTTP
-            URL: https://ui5.sap.com
-          existing_destinations_policy: update
+            - Authentication: NoAuthentication
+              HTML5.ForwardAuthToken: true
+              Name: covidApp-srv-api
+              ProxyType: Internet
+              Type: HTTP
+              URL: "~{srv-api/srv-url}"
+          existing_destinations_policy: ignore
       version: 1.0.0
     service: destination
     service-name: covidApp-dest-srv
     service-plan: lite
-
+  requires: 
+    - name: srv-api
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
