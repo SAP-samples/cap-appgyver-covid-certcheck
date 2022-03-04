@@ -17,6 +17,7 @@ modules:
     buildpack: nodejs_buildpack
   build-parameters:
     builder: npm-ci
+
 - name: covidApp-db-deployer
   type: hdb
   path: gen/db
@@ -24,6 +25,7 @@ modules:
   - name: covidApp-db
   parameters:
     buildpack: nodejs_buildpack
+
 - name: covidApp-app-content
   type: com.sap.application.content
   path: .
@@ -38,6 +40,7 @@ modules:
       - covidcheckcovidcheckui.zip
       name: covidcheckcovidcheckui
       target-path: resources/
+
 - name: covidcheckcovidcheckui
   type: html5
   path: app/covidcheck-ui
@@ -48,6 +51,39 @@ modules:
     - npm install
     - npm run build:cf
     supported-platforms: []
+
+- name: covidApp-destination-content
+  type: com.sap.application.content
+  build-parameters:
+    no-source: true
+  requires:
+    - name: covidApp-uaa
+      parameters:
+        service-key:
+          name: covidApp-uaa-key
+    - name: covidApp-repo-host
+      parameters:
+        service-key:
+          name: covidApp-repo-host-key
+    - name: covidApp-dest-srv
+      parameters:
+        content-target: true
+  parameters:
+    content:
+      instance:
+        existing_destinations_policy: update
+        destinations:
+          - Name: covidApp-destination-html5
+            ServiceInstanceName: covidApp-repo-host
+            ServiceKeyName: covidApp-repo-host-key
+            sap.cloud.service: cloud.service
+          - Name: covidApp-destination-uaa
+            Authentication: OAuth2UserTokenExchange
+            ServiceInstanceName: covidApp-uaa
+            ServiceKeyName: covidApp-uaa-key
+            sap.cloud.service: cloud.service
+
+
 resources:
 - name: covidApp-uaa
   type: org.cloudfoundry.managed-service
@@ -58,6 +94,7 @@ resources:
     path: ./xs-security.json
     service: xsuaa
     service-plan: application
+
 - name: covidApp-db
   type: com.sap.xs.hdi-container
   parameters:
@@ -65,17 +102,18 @@ resources:
     service-plan: hdi-shared
   properties:
     hdi-service-name: ${service-name}
+
 - name: covidApp-repo-host
   type: org.cloudfoundry.managed-service
   parameters:
     service: html5-apps-repo
-    service-name: covidApp-html5-srv
     service-plan: app-host
+
 - name: covidApp-dest-srv
   type: org.cloudfoundry.managed-service
   parameters:
     config:
-      HTML5Runtime_enabled: false
+      HTML5Runtime_enabled: true
       init_data:
         instance:
           destinations:
@@ -89,6 +127,7 @@ resources:
     service: destination
     service-name: covidApp-dest-srv
     service-plan: lite
+
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true

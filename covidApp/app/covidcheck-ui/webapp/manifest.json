@@ -1,5 +1,8 @@
 {
     "_version": "1.32.0",
+    "sap.cloud": {
+        "service": "cloud.service"
+    },
     "sap.app": {
         "id": "covidcheck.covidcheckui",
         "type": "application",
