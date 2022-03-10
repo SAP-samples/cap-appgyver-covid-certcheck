@@ -6,7 +6,10 @@ modules:
 - name: covidApp-sapgraph
   type: nodejs
   path: .
-  requires:
+  parameters:
+    host: covidapp-sapgraph-${space}
+    memory: 256MB
+  requires: 
   - name: covidApp-graph
 
 resources:
