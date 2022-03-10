@@ -51,7 +51,7 @@ module.exports = cds.service.impl(async function () {
       return
     }
     let endDate = await checkValidityEnd(req)
-    persistValidationResult(req, result, endDate)
+    await persistValidationResult(req, result, endDate)
     return endDate.toString()
   })
 
@@ -68,18 +68,28 @@ function base64URLEncode(str) {
     .replace(/=/g, "");
 }
 
-function persistValidationResult(req, result, endDate) {
+async function persistValidationResult(req, result, endDate) {
   const { Permissions } = cds.entities('covidcheck')
+  const empId = req.req.authInfo.getLogonName()
   const tx = cds.tx(req)
+  let dbResult
+
+  let existingPermission = await tx.run(SELECT.one.from(Permissions).where({ employeeID: empId }))
   try {
-    tx.run([
-      INSERT.into(Permissions).entries({
-        employeeID: req.req.authInfo.getLogonName(),
+    if (!existingPermission) {
+      dbResult = await tx.run(INSERT.into(Permissions).entries({
+        employeeID: empId,
         firstName: result.nam.gn,
         lastName: result.nam.fn,
         permissionUntil: endDate
-      })
-    ])
+      }))
+      console.log(`new permission for ${empId} until ${endDate}`)
+    } else {
+      dbResult = await tx.run(UPDATE(Permissions).set({ permissionUntil: endDate }).where({ employeeID: empId }))
+      console.log(`updated permission for ${empId} until ${endDate}`)
+    }
+
+    console.log("FEEDBACK: " + dbResult)
   } catch (error) {
     console.log(error)
     req.error(error)
@@ -99,7 +109,7 @@ async function checkValidityEnd(req) {
     try {
       await global.verifier.checkCertificate(req.data.certificateString, 'DE', checkDate)
     } catch (error) {
-      return subDays(checkDate, 1)
+      return subDays(checkDate, 1).toISOString().substring(0, 10)
     }
 
   } while (isValid);

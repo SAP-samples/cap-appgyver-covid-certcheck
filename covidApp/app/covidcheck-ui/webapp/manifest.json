@@ -111,6 +111,7 @@
                     "name": "sap.fe.templates.ListReport",
                     "options": {
                         "settings": {
+                            "initialLoad": true,
                             "entitySet": "Permissions",
                             "variantManagement": "Page",
                             "navigation": {
