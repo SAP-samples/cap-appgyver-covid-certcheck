@@ -1,0 +1,9 @@
+# manifest.yml for manual deployment
+---
+applications:
+- name: covidapp-sapgraph
+  path: .
+  memory: 256M
+  buildpack: nodejs_buildpack
+  services:
+  - covidApp-graph

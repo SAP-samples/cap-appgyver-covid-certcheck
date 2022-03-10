@@ -1,0 +1,17 @@
+_schema-version: "3.1"
+ID: covidApp
+description: A simple AppGyver App.
+version: 1.0.0
+modules:
+- name: covidApp-sapgraph
+  type: nodejs
+  path: .
+  requires:
+  - name: covidApp-graph
+
+resources:
+- name: covidApp-graph
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: sap-graph
+    service-plan: standard
