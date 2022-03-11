@@ -1,0 +1,28 @@
+{
+  "name": "covidapp-sapgraph",
+  "version": "1.0.0",
+  "description": "Query SuccessFactors using SAP Graph",
+  "scripts": {
+    "start": "node lib/index.js",
+    "lint": "eslint lib/**/*.js",
+    "fix-eslint": "eslint lib/** --fix"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/graph-toolkit": "^3.0.4",
+    "@sap/logging": "^6.0.3",
+    "@sap/xsenv": "^3.1.1",
+    "@sap/xssec": "^3.2.11",
+    "express": "4.17.1",
+    "http-status-codes": "2.1.4",
+    "string-similarity-js": "2.1.4",
+    "node-fetch": "2.6.7",
+    "jsonwebtoken": "^8.5.1",
+    "passport": "^0.4.1",
+    "helmet": "^4.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.28.0"
+  }
+}
