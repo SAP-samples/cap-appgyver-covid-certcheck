@@ -27,7 +27,7 @@ class CovidCertificateVerifier {
         await this.loadValueSets()
     }
 
-    async checkCertificate(certificateString, countryOfOffice, date) {
+    async checkCertificate(certificateString, countryOfOffice, date, logEnabled) {
 
         const base45data = certificateString.slice(4)
 
@@ -58,7 +58,7 @@ class CovidCertificateVerifier {
         const payload = cbor.decodeFirstSync(cbor_data)
 
         this.checkDates(payload)
-        this.executeRules(payload, countryOfOffice, date)
+        this.executeRules(payload, countryOfOffice, date, logEnabled)
         return payload.get(this.PAYLOAD).get(1)
     }
 
@@ -77,7 +77,7 @@ class CovidCertificateVerifier {
         if (endDate < today) throw new CertificateVerificationException("certificate not valid anymore")
     }
 
-    executeRules(payload, countryOfOffice, date) {
+    executeRules(payload, countryOfOffice, date, logEnabled) {
 
         let options = {
             validationClock: date.toISOString(),
@@ -90,7 +90,7 @@ class CovidCertificateVerifier {
         countryRules.forEach(rule => {
             let rulePassed = certLogicJs.evaluate(rule.Logic, { payload: actualPayload, external: options })
             if (!rulePassed) {
-                console.error(rule.Description.find((element) => element.lang === 'en').desc)
+                if (logEnabled) console.error(rule.Description.find((element) => element.lang === 'en').desc)
                 throw new CertificateVerificationException(rule.Description.find((element) => element.lang === 'en').desc)
             }
         })

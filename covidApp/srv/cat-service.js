@@ -30,7 +30,7 @@ module.exports = cds.service.impl(async function () {
 
   this.on("decodeCertificateString", async req => {
     try {
-      result = await global.verifier.checkCertificate(req.data.certificateString, 'DE', new Date())
+      result = await global.verifier.checkCertificate(req.data.certificateString, 'DE', new Date(), true)
     } catch (error) {
       if (error instanceof CertificateVerificationException) {
         req.error({
@@ -88,8 +88,6 @@ async function persistValidationResult(req, result, endDate) {
       dbResult = await tx.run(UPDATE(Permissions).set({ permissionUntil: endDate }).where({ employeeID: empId }))
       console.log(`updated permission for ${empId} until ${endDate}`)
     }
-
-    console.log("FEEDBACK: " + dbResult)
   } catch (error) {
     console.log(error)
     req.error(error)
@@ -107,7 +105,7 @@ async function checkValidityEnd(req) {
   do {
     checkDate = addDays(checkDate, 1)
     try {
-      await global.verifier.checkCertificate(req.data.certificateString, 'DE', checkDate)
+      await global.verifier.checkCertificate(req.data.certificateString, 'DE', checkDate, false)
     } catch (error) {
       return subDays(checkDate, 1).toISOString().substring(0, 10)
     }
