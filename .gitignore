@@ -2,3 +2,6 @@
 # added by cds bind
 .cdsrc-private.json
 *.private.http
+**/.DS_Store
+**/node_modules/
+**/package-lock.json
