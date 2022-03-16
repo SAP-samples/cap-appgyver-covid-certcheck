@@ -6,8 +6,6 @@ const CertificateVerificationException = require('./lib/CertificateVerificationE
 
 module.exports = cds.service.impl(async function () {
 
-
-
   cds.once('served', async () => {
     if (!global.verifier) {
       global.verifier = new CovidCertificateVerifier()
@@ -58,6 +56,14 @@ module.exports = cds.service.impl(async function () {
   this.on("getAvailableCountries", async req => {
     return global.verifier.availableCountries
   })
+
+  this.on("testGraphService", async req => {
+    const graphMicroService = await cds.connect.to('GraphService')
+    let result = graphMicroService.get('/getEmployeeData?firstName=Maximilian&lastName=Streifeneder')
+    return "läuft"
+  })
+
+
 });
 
 function base64URLEncode(str) {
