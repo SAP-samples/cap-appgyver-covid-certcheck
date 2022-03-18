@@ -12,7 +12,7 @@
       "port": 9229,
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "/home/vcap/app"
-    }
+    },
     {
       "command": "cds run --with-mocks --in-memory?",
       "name": "cds run",

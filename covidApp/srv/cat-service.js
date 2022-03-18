@@ -2,6 +2,8 @@ const cds = require("@sap/cds");
 const crypto = require("crypto");
 const CovidCertificateVerifier = require('./lib/CovidCertificateVerifier.js')
 const CertificateVerificationException = require('./lib/CertificateVerificationException.js')
+const { useOrFetchDestination } = require("@sap-cloud-sdk/connectivity");
+const { executeHttpRequest } = require("@sap-cloud-sdk/http-client");
 
 
 module.exports = cds.service.impl(async function () {
@@ -59,8 +61,30 @@ module.exports = cds.service.impl(async function () {
 
   this.on("testGraphService", async req => {
     const graphMicroService = await cds.connect.to('GraphService')
-    let result = graphMicroService.get('/getEmployeeData?firstName=Maximilian&lastName=Streifeneder')
-    return "läuft"
+
+    const jwt = req.req.authInfo.getTokenInfo().getTokenValue()
+
+    const destination = await useOrFetchDestination({
+      destinationName: graphMicroService.destination,
+      jwt,
+    });
+
+    let result = await executeHttpRequest(
+      { destinationName: graphMicroService.destination, jwt },
+      {
+        headers: {
+          accept: '*/*',
+          client_id: destination.clientId,
+          client_secret: destination.clientSecret,
+        },
+        method: 'GET',
+        timeout: 60000,
+        url: `${destination.url}/graph/getEmployeeData?firstName=Maximilian&lastName=Streifeneder`,
+      }
+    );
+
+    //let result = await graphMicroService.get('/getEmployeeData?firstName=Maximilian&lastName=Streifeneder')
+    return JSON.stringify(result)
   })
 
 
