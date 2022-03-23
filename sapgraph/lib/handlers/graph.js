@@ -21,7 +21,9 @@ async function handleEmployeeQuery(req, res) {
     //query SF and return result
     const authToken = req.headers.authorization;
     try{
-      const employeeDataFromSF = await getEmployeeData(authToken);
+      //exchange covid app xsuaa token with graph xsuaa token
+      const graphToken = await getGraphXSUAAToken(authToken);
+      const employeeDataFromSF = await getEmployeeData(graphToken);
       //compare data from SF with name from covid certificate
       const nameFromCertificate = firstName + ' ' + lastName;
       const nameFromSF = employeeDataFromSF.firstName + ' ' + employeeDataFromSF.lastName;
@@ -38,6 +40,32 @@ async function handleEmployeeQuery(req, res) {
   }
 }
 
+async function getGraphXSUAAToken(authToken){
+  const token = (authToken.split(' '))[1];
+  const graphUaa = xsenv.cfServiceCredentials(GRAPH_INSTANCE_NAME).uaa;
+  const uaaDetails = {
+    "grant_type":"urn:ietf:params:oauth:grant-type:jwt-bearer",
+    "client_id":graphUaa.clientid,
+    "client_secret":graphUaa.clientsecret,
+    "response_type":"token+id_token",
+    "assertion":token
+  };
+  const formBody = Object.keys(uaaDetails).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(uaaDetails[key])).join('&');
+  const options = {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: formBody
+  };
+
+  const oAuthUrl = graphUaa.url+"/oauth/token";
+  const response = await fetch(oAuthUrl, options);
+  const graphToken = (await response.json()).access_token;
+  return graphToken;
+}
+
 async function getEmployeeData(authToken){
   //fetch logged in user email from token
   const userEmail = getUserEmailFromAuthToken(authToken);
@@ -51,6 +79,7 @@ async function getEmployeeData(authToken){
     const firstNameFromSF = dataFromSF.personalInfoNav[0].firstName;
     const lastNameFromSF = dataFromSF.personalInfoNav[0].lastName;
     const dateOfBirthFromSF = dataFromSF.dateOfBirth;
+    
     const sfData = {};
     sfData.firstName = firstNameFromSF;
     sfData.lastName = lastNameFromSF;
@@ -96,21 +125,11 @@ function getUserEmailFromAuthToken(authToken) {
     if (!authToken) {
       return sUserEmail;
     }
-    //Retrive token type and token from Auth header
-    const parts = authToken.split(' ');
-    let sTokenType = '';
-    let sToken = '';
-    if (parts.length > 1) {
-      sTokenType = parts[0];
-      sToken = parts[1];
+    const decodedToken = jsonwebtoken.decode(sToken);
+    if (!decodedToken) {
+      return sUserEmail;
     }
-    if (sTokenType === 'Bearer') {
-      const decodedToken = jsonwebtoken.decode(sToken);
-      if (!decodedToken) {
-        return sUserEmail;
-      }
-      sUserEmail = decodedToken.email;
-    }
+    sUserEmail = decodedToken.email;
   } catch (error) {
     return sUserEmail;
   }
