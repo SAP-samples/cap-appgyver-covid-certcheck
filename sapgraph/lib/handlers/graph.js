@@ -62,13 +62,13 @@ async function getGraphXSUAAToken(authToken){
 
   const oAuthUrl = graphUaa.url+"/oauth/token";
   const response = await fetch(oAuthUrl, options);
-  const graphToken = (await response.json()).access_token;
-  return graphToken;
+  const graphToken1 = (await response.json()).access_token;
+  return graphToken1;
 }
 
 async function getEmployeeData(authToken){
   //fetch logged in user email from token
-  const userEmail = getUserEmailFromAuthToken(authToken);
+  const userEmail = await getUserEmailFromAuthToken(authToken);
   if(userEmail){
     const graphUri = xsenv.cfServiceCredentials(GRAPH_INSTANCE_NAME).uri;
     const personIdQueryUrl = `${graphUri}/${DATA_GRAPH_ID}/${HCM_ENTITY}/PerEmail?$filter=isPrimary eq true and emailAddress eq '${userEmail}'&$select=personIdExternal&$top=1`;
@@ -79,11 +79,20 @@ async function getEmployeeData(authToken){
     const firstNameFromSF = dataFromSF.personalInfoNav[0].firstName;
     const lastNameFromSF = dataFromSF.personalInfoNav[0].lastName;
     const dateOfBirthFromSF = dataFromSF.dateOfBirth;
-    
+    const isContingentWorker = dataFromSF.employmentNav[0].isContingentWorker;
+    const empAssignmentClass = dataFromSF.employmentNav[0].assignmentClass;
+    const userId = dataFromSF.employmentNav[0].userId;
+    //get employee job details
+    const empJobUrl = `${graphUri}/${DATA_GRAPH_ID}/${HCM_ENTITY}/EmpJob?$filter=userId eq '${userId}'&$top=1&$select=countryOfCompany,location&$expand=locationNav`;
+    const empJobDataFromSF = await querySF(empJobUrl, authToken);
     const sfData = {};
     sfData.firstName = firstNameFromSF;
     sfData.lastName = lastNameFromSF;
     sfData.dateOfBirth = dateOfBirthFromSF;
+    sfData.isContingentWorker = isContingentWorker;
+    sfData.empAssignmentClass = empAssignmentClass;
+    sfData.countryOfCompany = empJobDataFromSF.empJobDataFromSF;
+    sfData.location = empJobDataFromSF.locationNav.name;
     return sfData;
   } else {
     throw new Error("User email not found");
@@ -103,7 +112,7 @@ async function querySF(url,authToken){
   const options = {
     method: "get",
     headers: {
-      "Authorization": authToken,
+      "Authorization": 'Bearer ' + authToken,
       "Accept": "application/json"
     }
   };
@@ -119,13 +128,13 @@ function isStringValid(str) {
     return true;
 }
 
-function getUserEmailFromAuthToken(authToken) {
+async function getUserEmailFromAuthToken(authToken) {
   let sUserEmail = '';
   try {
     if (!authToken) {
       return sUserEmail;
     }
-    const decodedToken = jsonwebtoken.decode(sToken);
+    const decodedToken = jsonwebtoken.decode(authToken);
     if (!decodedToken) {
       return sUserEmail;
     }
