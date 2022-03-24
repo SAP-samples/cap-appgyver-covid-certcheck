@@ -80,7 +80,8 @@ async function getEmployeeData(authToken){
     const lastNameFromSF = dataFromSF.personalInfoNav[0].lastName;
     const dateOfBirthFromSF = dataFromSF.dateOfBirth;
     const isContingentWorker = dataFromSF.employmentNav[0].isContingentWorker;
-    const empAssignmentClass = dataFromSF.employmentNav[0].assignmentClass;
+    const startDate = dataFromSF.employmentNav[0].startDate;
+    const endDate = dataFromSF.employmentNav[0].endDate;
     const userId = dataFromSF.employmentNav[0].userId;
     //get employee job details
     const empJobUrl = `${graphUri}/${DATA_GRAPH_ID}/${HCM_ENTITY}/EmpJob?$filter=userId eq '${userId}'&$top=1&$select=countryOfCompany,location&$expand=locationNav`;
@@ -90,8 +91,9 @@ async function getEmployeeData(authToken){
     sfData.lastName = lastNameFromSF;
     sfData.dateOfBirth = dateOfBirthFromSF;
     sfData.isContingentWorker = isContingentWorker;
-    sfData.empAssignmentClass = empAssignmentClass;
-    sfData.countryOfCompany = empJobDataFromSF.empJobDataFromSF;
+    sfData.startDate = startDate;
+    sfData.endDate = endDate;
+    sfData.countryOfCompany = empJobDataFromSF.countryOfCompany;
     sfData.location = empJobDataFromSF.locationNav.name;
     return sfData;
   } else {
@@ -109,16 +111,20 @@ async function checkStringSimilarity(string1,string2){
 }
 
 async function querySF(url,authToken){
-  const options = {
-    method: "get",
-    headers: {
-      "Authorization": 'Bearer ' + authToken,
-      "Accept": "application/json"
-    }
-  };
-  const response = await fetch(url, options);
-  const result = (await response.json()).value[0];
-  return result;
+  try{
+    const options = {
+      method: "get",
+      headers: {
+        "Authorization": 'Bearer ' + authToken,
+        "Accept": "application/json"
+      }
+    };
+    const response = await fetch(url, options);
+    const result = (await response.json()).value[0];
+    return result;
+  } catch(err){
+    throw new Error("Employee details not found");
+  }
 }
 
 function isStringValid(str) {
