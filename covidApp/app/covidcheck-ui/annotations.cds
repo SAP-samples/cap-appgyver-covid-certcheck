@@ -1,61 +1,108 @@
 using PermissionsService as service from '../../srv/permissions-service';
 
-annotate service.Permissions with @(
-    UI.LineItem : [
-        {
-            $Type : 'UI.DataField',
-            Label : 'employeeID',
-            Value : employeeID,
-        },
-        {
-            $Type : 'UI.DataField',
-            Label : 'firstName',
-            Value : firstName,
-        },
-        {
-            $Type : 'UI.DataField',
-            Label : 'lastName',
-            Value : lastName,
-        },
-        {
-            $Type : 'UI.DataField',
-            Label : 'permissionUntil',
-            Value : permissionUntil,
-        },
-    ]
-);
+annotate service.Permissions with @(UI.LineItem : [
+    {
+        $Type : 'UI.DataField',
+        Label : 'ID',
+        Value : employeeID,
+    },
+    {
+        $Type : 'UI.DataField',
+        Label : 'First Name',
+        Value : firstName,
+    },
+    {
+        $Type : 'UI.DataField',
+        Label : 'Last Name',
+        Value : lastName,
+    },
+    {
+        $Type : 'UI.DataField',
+        Label : 'Valid Until',
+        Value : permissionUntil,
+    },
+    {
+        $Type : 'UI.DataField',
+        Label : 'Date of Birth',
+        Value : dateOfBirth,
+    },
+    {
+        $Type : 'UI.DataField',
+        Label : 'Location',
+        Value : location,
+    },
+    {
+        $Type : 'UI.DataField',
+        Label : 'Employee Assignment Class',
+        Value : employeeAssignmentClass,
+    },
+    {
+        $Type : 'UI.DataField',
+        Label : 'Created at',
+        Value : createdAt,
+    },
+    {
+        $Type : 'UI.DataField',
+        Label : 'Updated at',
+        Value : modifiedAt,
+    }
+]);
+
 annotate service.Permissions with @(
     UI.FieldGroup #GeneratedGroup1 : {
         $Type : 'UI.FieldGroupType',
-        Data : [
+        Data  : [
             {
                 $Type : 'UI.DataField',
-                Label : 'employeeID',
+                Label : 'ID',
                 Value : employeeID,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'firstName',
+                Label : 'First Name',
                 Value : firstName,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'lastName',
+                Label : 'Last Name',
                 Value : lastName,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'permissionUntil',
+                Label : 'Valid Until',
                 Value : permissionUntil,
             },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Date of Birth',
+                Value : dateOfBirth,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Location',
+                Value : location,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Employee Assignment Class',
+                Value : employeeAssignmentClass,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Created at',
+                Value : createdAt,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Updated at',
+                Value : modifiedAt,
+            }
         ],
     },
-    UI.Facets : [
-        {
-            $Type : 'UI.ReferenceFacet',
-            ID : 'GeneratedFacet1',
-            Label : 'General Information',
-            Target : '@UI.FieldGroup#GeneratedGroup1',
-        },
-    ]
+    UI.Facets                      : [{
+        $Type  : 'UI.ReferenceFacet',
+        ID     : 'GeneratedFacet1',
+        Label  : 'General Information',
+        Target : '@UI.FieldGroup#GeneratedGroup1',
+    }, ]
 );

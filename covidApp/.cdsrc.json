@@ -8,6 +8,17 @@
         },
         "db": {
             "kind": "hana"
+        },
+        "GraphService": {
+            "kind": "rest",
+            "credentials": {
+                "destination": "Graph2",
+                "path": "/graph",
+                "forwardAuthToken": true
+            },
+            "destinationOptions": {
+                "selectionStrategy": "alwaysProvider"
+            }
         }
     },
     "hana": {

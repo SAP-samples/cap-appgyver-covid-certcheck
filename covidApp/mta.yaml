@@ -85,11 +85,6 @@ modules:
               sap.cloud.service: cloud.service
 
 resources:
-  - name: external-configurations
-    type: configuration
-    parameters:
-      provider-id: covidApp-sapgraph:srv-api
-
   - name: covidApp-uaa
     type: org.cloudfoundry.managed-service
     parameters:

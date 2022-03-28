@@ -60,31 +60,8 @@ module.exports = cds.service.impl(async function () {
   })
 
   this.on("testGraphService", async req => {
-    const graphMicroService = await cds.connect.to('GraphService')
-
-    const jwt = req.req.authInfo.getTokenInfo().getTokenValue()
-
-    const destination = await useOrFetchDestination({
-      destinationName: graphMicroService.destination,
-      jwt,
-    });
-
-    let result = await executeHttpRequest(
-      { destinationName: graphMicroService.destination, jwt },
-      {
-        headers: {
-          accept: '*/*',
-          client_id: destination.clientId,
-          client_secret: destination.clientSecret,
-        },
-        method: 'GET',
-        timeout: 60000,
-        url: `${destination.url}/graph/getEmployeeData?firstName=Maximilian&lastName=Streifeneder`,
-      }
-    );
-
-    //let result = await graphMicroService.get('/getEmployeeData?firstName=Maximilian&lastName=Streifeneder')
-    return JSON.stringify(result)
+    let result = getSFSFDetails('Maximilian', 'Streifeneder', req)
+    return JSON.stringify(result.data)
   })
 
 
@@ -100,17 +77,24 @@ function base64URLEncode(str) {
 
 async function persistValidationResult(req, result, endDate) {
   const { Permissions } = cds.entities('covidcheck')
+  let firstName = result.nam.gn
+  let lastName = result.nam.fn
   const empId = req.req.authInfo.getLogonName()
   const tx = cds.tx(req)
   let dbResult
+
+  let { dateOfBirth, location, empAssignmentClass } = await getSFSFDetails(firstName, lastName, req)
 
   let existingPermission = await tx.run(SELECT.one.from(Permissions).where({ employeeID: empId }))
   try {
     if (!existingPermission) {
       dbResult = await tx.run(INSERT.into(Permissions).entries({
         employeeID: empId,
-        firstName: result.nam.gn,
-        lastName: result.nam.fn,
+        firstName: firstName,
+        lastName: lastName,
+        dateOfBirth: dateOfBirth,
+        location: location,
+        employeeAssignmentClass: empAssignmentClass,
         permissionUntil: endDate
       }))
       console.log(`new permission for ${empId} until ${endDate}`)
@@ -128,19 +112,58 @@ function sha256(buffer) {
   return crypto.createHash("sha256").update(buffer).digest();
 }
 
+async function getSFSFDetails(firstName, lastName, req) {
+  const graphMicroService = await cds.connect.to('GraphService')
+  firstName = encodeURI(firstName)
+  lastName = encodeURI(lastName)
+  const jwt = req.req.authInfo.getTokenInfo().getTokenValue()
+
+  const destination = await useOrFetchDestination({
+    destinationName: graphMicroService.destination,
+    jwt,
+  });
+
+  let result = await executeHttpRequest(
+    { destinationName: graphMicroService.destination, jwt },
+    {
+      headers: {
+        accept: '*/*',
+        client_id: destination.clientId,
+        client_secret: destination.clientSecret,
+      },
+      method: 'GET',
+      timeout: 60000,
+      url: `${destination.url}/graph/getEmployeeData?firstName=${firstName}&lastName=${lastName}`,
+    }
+  );
+
+  return result.data
+}
+
 async function checkValidityEnd(req) {
   let checkDate = new Date()
   let isValid = true
 
+  let countDays = 0
+
   do {
     checkDate = addDays(checkDate, 1)
+    countDays++
     try {
-      await global.verifier.checkCertificate(req.data.certificateString, 'DE', checkDate, false)
+      let result = await global.verifier.checkCertificate(req.data.certificateString, 'DE', checkDate, false)
+      if (isBoostered(result)) {
+        return new Date("9999-12-31").toISOString().substring(0, 10)
+      }
     } catch (error) {
       return subDays(checkDate, 1).toISOString().substring(0, 10)
     }
 
   } while (isValid);
+}
+
+function isBoostered(certificatePayload) {
+  // needs to be implemented by the amount of dosis (or dosis given > dosis needed)
+  return false
 }
 
 function addDays(date, days) {
