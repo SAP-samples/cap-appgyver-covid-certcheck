@@ -21,7 +21,9 @@ async function handleEmployeeQuery(req, res) {
     //query SF and return result
     const authToken = req.headers.authorization;
     try{
-      const employeeDataFromSF = await getEmployeeData(authToken);
+      //exchange covid app xsuaa token with graph xsuaa token
+      const graphToken = await getGraphXSUAAToken(authToken);
+      const employeeDataFromSF = await getEmployeeData(graphToken);
       //compare data from SF with name from covid certificate
       const nameFromCertificate = firstName + ' ' + lastName;
       const nameFromSF = employeeDataFromSF.firstName + ' ' + employeeDataFromSF.lastName;
@@ -38,9 +40,35 @@ async function handleEmployeeQuery(req, res) {
   }
 }
 
+async function getGraphXSUAAToken(authToken){
+  const token = (authToken.split(' '))[1];
+  const graphUaa = xsenv.cfServiceCredentials(GRAPH_INSTANCE_NAME).uaa;
+  const uaaDetails = {
+    "grant_type":"urn:ietf:params:oauth:grant-type:jwt-bearer",
+    "client_id":graphUaa.clientid,
+    "client_secret":graphUaa.clientsecret,
+    "response_type":"token+id_token",
+    "assertion":token
+  };
+  const formBody = Object.keys(uaaDetails).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(uaaDetails[key])).join('&');
+  const options = {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: formBody
+  };
+
+  const oAuthUrl = graphUaa.url+"/oauth/token";
+  const response = await fetch(oAuthUrl, options);
+  const graphToken1 = (await response.json()).access_token;
+  return graphToken1;
+}
+
 async function getEmployeeData(authToken){
   //fetch logged in user email from token
-  const userEmail = getUserEmailFromAuthToken(authToken);
+  const userEmail = await getUserEmailFromAuthToken(authToken);
   if(userEmail){
     const graphUri = xsenv.cfServiceCredentials(GRAPH_INSTANCE_NAME).uri;
     const personIdQueryUrl = `${graphUri}/${DATA_GRAPH_ID}/${HCM_ENTITY}/PerEmail?$filter=isPrimary eq true and emailAddress eq '${userEmail}'&$select=personIdExternal&$top=1`;
@@ -51,10 +79,22 @@ async function getEmployeeData(authToken){
     const firstNameFromSF = dataFromSF.personalInfoNav[0].firstName;
     const lastNameFromSF = dataFromSF.personalInfoNav[0].lastName;
     const dateOfBirthFromSF = dataFromSF.dateOfBirth;
+    const isContingentWorker = dataFromSF.employmentNav[0].isContingentWorker;
+    const startDate = dataFromSF.employmentNav[0].startDate;
+    const endDate = dataFromSF.employmentNav[0].endDate;
+    const userId = dataFromSF.employmentNav[0].userId;
+    //get employee job details
+    const empJobUrl = `${graphUri}/${DATA_GRAPH_ID}/${HCM_ENTITY}/EmpJob?$filter=userId eq '${userId}'&$top=1&$select=countryOfCompany,location&$expand=locationNav`;
+    const empJobDataFromSF = await querySF(empJobUrl, authToken);
     const sfData = {};
     sfData.firstName = firstNameFromSF;
     sfData.lastName = lastNameFromSF;
     sfData.dateOfBirth = dateOfBirthFromSF;
+    sfData.isContingentWorker = isContingentWorker;
+    sfData.startDate = startDate;
+    sfData.endDate = endDate;
+    sfData.countryOfCompany = empJobDataFromSF.countryOfCompany;
+    sfData.location = empJobDataFromSF.locationNav.name;
     return sfData;
   } else {
     throw new Error("User email not found");
@@ -71,16 +111,20 @@ async function checkStringSimilarity(string1,string2){
 }
 
 async function querySF(url,authToken){
-  const options = {
-    method: "get",
-    headers: {
-      "Authorization": authToken,
-      "Accept": "application/json"
-    }
-  };
-  const response = await fetch(url, options);
-  const result = (await response.json()).value[0];
-  return result;
+  try{
+    const options = {
+      method: "get",
+      headers: {
+        "Authorization": 'Bearer ' + authToken,
+        "Accept": "application/json"
+      }
+    };
+    const response = await fetch(url, options);
+    const result = (await response.json()).value[0];
+    return result;
+  } catch(err){
+    throw new Error("Employee details not found");
+  }
 }
 
 function isStringValid(str) {
@@ -90,27 +134,17 @@ function isStringValid(str) {
     return true;
 }
 
-function getUserEmailFromAuthToken(authToken) {
+async function getUserEmailFromAuthToken(authToken) {
   let sUserEmail = '';
   try {
     if (!authToken) {
       return sUserEmail;
     }
-    //Retrive token type and token from Auth header
-    const parts = authToken.split(' ');
-    let sTokenType = '';
-    let sToken = '';
-    if (parts.length > 1) {
-      sTokenType = parts[0];
-      sToken = parts[1];
+    const decodedToken = jsonwebtoken.decode(authToken);
+    if (!decodedToken) {
+      return sUserEmail;
     }
-    if (sTokenType === 'Bearer') {
-      const decodedToken = jsonwebtoken.decode(sToken);
-      if (!decodedToken) {
-        return sUserEmail;
-      }
-      sUserEmail = decodedToken.email;
-    }
+    sUserEmail = decodedToken.email;
   } catch (error) {
     return sUserEmail;
   }
