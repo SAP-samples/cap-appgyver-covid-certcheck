@@ -81,9 +81,14 @@ async function persistValidationResult(req, result, endDate) {
   let lastName = result.nam.fn
   const empId = req.req.authInfo.getLogonName()
   const tx = cds.tx(req)
-  let dbResult
+  let dbResult, dateOfBirth, location, isContingentWorker
 
-  let { dateOfBirth, location, empAssignmentClass } = await getSFSFDetails(firstName, lastName, req)
+  try {
+    ({ dateOfBirth = null, location = null, isContingentWorker = null, countryOfCompany = null } = await getSFSFDetails(firstName, lastName, req))
+  } catch (error) {
+    console.error(`${firstName} ${lastName} - erroneous SFSF call`)
+    console.error(error.response.data)
+  }
 
   let existingPermission = await tx.run(SELECT.one.from(Permissions).where({ employeeID: empId }))
   try {
@@ -94,12 +99,21 @@ async function persistValidationResult(req, result, endDate) {
         lastName: lastName,
         dateOfBirth: dateOfBirth,
         location: location,
-        employeeAssignmentClass: empAssignmentClass,
+        countryOfCompany: countryOfCompany,
+        isContingentWorker: isContingentWorker,
         permissionUntil: endDate
       }))
       console.log(`new permission for ${empId} until ${endDate}`)
     } else {
-      dbResult = await tx.run(UPDATE(Permissions).set({ permissionUntil: endDate }).where({ employeeID: empId }))
+      dbResult = await tx.run(UPDATE(Permissions).set({
+        firstName: firstName,
+        lastName: lastName,
+        permissionUntil: endDate,
+        dateOfBirth: dateOfBirth,
+        location: location,
+        countryOfCompany: countryOfCompany,
+        isContingentWorker: isContingentWorker
+      }).where({ employeeID: empId }))
       console.log(`updated permission for ${empId} until ${endDate}`)
     }
   } catch (error) {
@@ -151,7 +165,8 @@ async function checkValidityEnd(req) {
     countDays++
     try {
       let result = await global.verifier.checkCertificate(req.data.certificateString, 'DE', checkDate, false)
-      if (isBoostered(result)) {
+      //quick and dirty to avoid endless loop
+      if (isValidInfinite(countDays)) {
         return new Date("9999-12-31").toISOString().substring(0, 10)
       }
     } catch (error) {
@@ -161,9 +176,16 @@ async function checkValidityEnd(req) {
   } while (isValid);
 }
 
-function isBoostered(certificatePayload) {
-  // needs to be implemented by the amount of dosis (or dosis given > dosis needed)
-  return false
+
+/*
+The method to check how long a certificate is valid checks day by day if the certificate is still valid. 
+In some countries, certificates (boosters, etc.) are valid unlimited period. 
+We assume that if a certificate is valid for more than two years, the certificate 
+is valid indefinitely. This avoids that the actual method continues to check day by day (infinite loop) 
+whether the certificate is valid. 
+**/
+function isValidInfinite(countDays) {
+  return (countDays > 700) ? true : false
 }
 
 function addDays(date, days) {

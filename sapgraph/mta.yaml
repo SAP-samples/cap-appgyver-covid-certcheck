@@ -9,6 +9,7 @@ modules:
   parameters:
     host: covidapp-sapgraph-${space}
     memory: 256MB
+    enable-ssh: true
   requires: 
   - name: covidApp-graph
   - name: covidApp-uaa
@@ -21,3 +22,4 @@ resources:
     service-plan: standard
 - name: covidApp-uaa
   type: org.cloudfoundry.existing-service
+

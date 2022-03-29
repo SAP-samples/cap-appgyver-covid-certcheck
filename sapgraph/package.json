@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Query SuccessFactors using SAP Graph",
   "scripts": {
-    "start": "node lib/index.js",
+    "start": "npx --node-options=--inspect node lib/index.js",
     "lint": "eslint lib/**/*.js",
     "fix-eslint": "eslint lib/** --fix"
   },

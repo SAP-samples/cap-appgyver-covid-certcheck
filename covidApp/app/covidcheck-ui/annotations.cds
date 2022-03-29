@@ -3,11 +3,6 @@ using PermissionsService as service from '../../srv/permissions-service';
 annotate service.Permissions with @(UI.LineItem : [
     {
         $Type : 'UI.DataField',
-        Label : 'ID',
-        Value : employeeID,
-    },
-    {
-        $Type : 'UI.DataField',
         Label : 'First Name',
         Value : firstName,
     },
@@ -33,8 +28,13 @@ annotate service.Permissions with @(UI.LineItem : [
     },
     {
         $Type : 'UI.DataField',
-        Label : 'Employee Assignment Class',
-        Value : employeeAssignmentClass,
+        Label : 'Country',
+        Value : countryOfCompany,
+    },
+    {
+        $Type : 'UI.DataField',
+        Label : 'Contingent Worker?',
+        Value : isContingentWorker,
     },
     {
         $Type : 'UI.DataField',
@@ -69,11 +69,6 @@ annotate service.Permissions with @(
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'Valid Until',
-                Value : permissionUntil,
-            },
-            {
-                $Type : 'UI.DataField',
                 Label : 'Date of Birth',
                 Value : dateOfBirth,
             },
@@ -84,8 +79,23 @@ annotate service.Permissions with @(
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'Employee Assignment Class',
-                Value : employeeAssignmentClass,
+                Label : 'Country',
+                Value : countryOfCompany,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Contingent Worker?',
+                Value : isContingentWorker,
+            }
+        ],
+    },
+    UI.FieldGroup #PermissionGroup : {
+        $Type : 'UI.FieldGroupType',
+        Data  : [
+            {
+                $Type : 'UI.DataField',
+                Label : 'Valid Until',
+                Value : permissionUntil,
             },
             {
                 $Type : 'UI.DataField',
@@ -99,10 +109,18 @@ annotate service.Permissions with @(
             }
         ],
     },
-    UI.Facets                      : [{
-        $Type  : 'UI.ReferenceFacet',
-        ID     : 'GeneratedFacet1',
-        Label  : 'General Information',
-        Target : '@UI.FieldGroup#GeneratedGroup1',
-    }, ]
+    UI.Facets                      : [
+        {
+            $Type  : 'UI.ReferenceFacet',
+            ID     : 'GeneratedFacet1',
+            Label  : 'Employee Information',
+            Target : '@UI.FieldGroup#GeneratedGroup1',
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            ID     : 'CertificateFacet',
+            Label  : 'PermissionDetails',
+            Target : '@UI.FieldGroup#PermissionGroup',
+        }
+    ]
 );
