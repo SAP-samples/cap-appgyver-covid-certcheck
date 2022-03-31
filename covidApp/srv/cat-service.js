@@ -29,6 +29,9 @@ module.exports = cds.service.impl(async function () {
   });
 
   this.on("decodeCertificateString", async req => {
+    let returnValue = {
+      validUntil: new String()
+    }
     try {
       result = await global.verifier.checkCertificate(req.data.certificateString, 'DE', new Date(), true)
     } catch (error) {
@@ -51,8 +54,9 @@ module.exports = cds.service.impl(async function () {
       return
     }
     let endDate = await checkValidityEnd(req)
+    returnValue.validUntil = endDate
     await persistValidationResult(req, result, endDate)
-    return endDate.toString()
+    return JSON.stringify(returnValue)
   })
 
   this.on("getAvailableCountries", async req => {
@@ -81,7 +85,7 @@ async function persistValidationResult(req, result, endDate) {
   let lastName = result.nam.fn
   const empId = req.req.authInfo.getLogonName()
   const tx = cds.tx(req)
-  let dbResult, dateOfBirth, location, isContingentWorker
+  let dbResult, dateOfBirth, location, isContingentWorker, countryOfCompany
 
   try {
     ({ dateOfBirth = null, location = null, isContingentWorker = null, countryOfCompany = null } = await getSFSFDetails(firstName, lastName, req))
