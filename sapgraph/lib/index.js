@@ -23,7 +23,7 @@ app.use(helmet({
   }
 }));
 
-passport.use(new JWTStrategy(xsenv.cfServiceCredentials({name: GRAPH_INSTANCE_NAME}).uaa));
+passport.use(new JWTStrategy(xsenv.cfServiceCredentials("covidApp-uaa")));
 app.use(passport.initialize());
 app.use(passport.authenticate('JWT', { session: false }));
 

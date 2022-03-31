@@ -29,6 +29,9 @@ module.exports = cds.service.impl(async function () {
   });
 
   this.on("decodeCertificateString", async req => {
+    let returnValue = {
+      validUntil: new String()
+    }
     try {
       result = await global.verifier.checkCertificate(req.data.certificateString, 'DE', new Date(), true)
     } catch (error) {
@@ -51,8 +54,9 @@ module.exports = cds.service.impl(async function () {
       return
     }
     let endDate = await checkValidityEnd(req)
+    returnValue.validUntil = endDate
     await persistValidationResult(req, result, endDate)
-    return endDate.toString()
+    return JSON.stringify(returnValue)
   })
 
   this.on("getAvailableCountries", async req => {
@@ -60,31 +64,8 @@ module.exports = cds.service.impl(async function () {
   })
 
   this.on("testGraphService", async req => {
-    const graphMicroService = await cds.connect.to('GraphService')
-
-    const jwt = req.req.authInfo.getTokenInfo().getTokenValue()
-
-    const destination = await useOrFetchDestination({
-      destinationName: graphMicroService.destination,
-      jwt,
-    });
-
-    let result = await executeHttpRequest(
-      { destinationName: graphMicroService.destination, jwt },
-      {
-        headers: {
-          accept: '*/*',
-          client_id: destination.clientId,
-          client_secret: destination.clientSecret,
-        },
-        method: 'GET',
-        timeout: 60000,
-        url: `${destination.url}/graph/getEmployeeData?firstName=Maximilian&lastName=Streifeneder`,
-      }
-    );
-
-    //let result = await graphMicroService.get('/getEmployeeData?firstName=Maximilian&lastName=Streifeneder')
-    return JSON.stringify(result)
+    let result = getSFSFDetails('Maximilian', 'Streifeneder', req)
+    return JSON.stringify(result.data)
   })
 
 
@@ -100,22 +81,43 @@ function base64URLEncode(str) {
 
 async function persistValidationResult(req, result, endDate) {
   const { Permissions } = cds.entities('covidcheck')
+  let firstName = result.nam.gn
+  let lastName = result.nam.fn
   const empId = req.req.authInfo.getLogonName()
   const tx = cds.tx(req)
-  let dbResult
+  let dbResult, dateOfBirth, location, isContingentWorker, countryOfCompany
+
+  try {
+    ({ dateOfBirth = null, location = null, isContingentWorker = null, countryOfCompany = null } = await getSFSFDetails(firstName, lastName, req))
+  } catch (error) {
+    console.error(`${firstName} ${lastName} - erroneous SFSF call`)
+    console.error(error.response.data)
+  }
 
   let existingPermission = await tx.run(SELECT.one.from(Permissions).where({ employeeID: empId }))
   try {
     if (!existingPermission) {
       dbResult = await tx.run(INSERT.into(Permissions).entries({
         employeeID: empId,
-        firstName: result.nam.gn,
-        lastName: result.nam.fn,
+        firstName: firstName,
+        lastName: lastName,
+        dateOfBirth: dateOfBirth,
+        location: location,
+        countryOfCompany: countryOfCompany,
+        isContingentWorker: isContingentWorker,
         permissionUntil: endDate
       }))
       console.log(`new permission for ${empId} until ${endDate}`)
     } else {
-      dbResult = await tx.run(UPDATE(Permissions).set({ permissionUntil: endDate }).where({ employeeID: empId }))
+      dbResult = await tx.run(UPDATE(Permissions).set({
+        firstName: firstName,
+        lastName: lastName,
+        permissionUntil: endDate,
+        dateOfBirth: dateOfBirth,
+        location: location,
+        countryOfCompany: countryOfCompany,
+        isContingentWorker: isContingentWorker
+      }).where({ employeeID: empId }))
       console.log(`updated permission for ${empId} until ${endDate}`)
     }
   } catch (error) {
@@ -128,19 +130,66 @@ function sha256(buffer) {
   return crypto.createHash("sha256").update(buffer).digest();
 }
 
+async function getSFSFDetails(firstName, lastName, req) {
+  const graphMicroService = await cds.connect.to('GraphService')
+  firstName = encodeURI(firstName)
+  lastName = encodeURI(lastName)
+  const jwt = req.req.authInfo.getTokenInfo().getTokenValue()
+
+  const destination = await useOrFetchDestination({
+    destinationName: graphMicroService.destination,
+    jwt,
+  });
+
+  let result = await executeHttpRequest(
+    { destinationName: graphMicroService.destination, jwt },
+    {
+      headers: {
+        accept: '*/*',
+        client_id: destination.clientId,
+        client_secret: destination.clientSecret,
+      },
+      method: 'GET',
+      timeout: 60000,
+      url: `${destination.url}/graph/getEmployeeData?firstName=${firstName}&lastName=${lastName}`,
+    }
+  );
+
+  return result.data
+}
+
 async function checkValidityEnd(req) {
   let checkDate = new Date()
   let isValid = true
 
+  let countDays = 0
+
   do {
     checkDate = addDays(checkDate, 1)
+    countDays++
     try {
-      await global.verifier.checkCertificate(req.data.certificateString, 'DE', checkDate, false)
+      let result = await global.verifier.checkCertificate(req.data.certificateString, 'DE', checkDate, false)
+      //quick and dirty to avoid endless loop
+      if (isValidInfinite(countDays)) {
+        return new Date("9999-12-31").toISOString().substring(0, 10)
+      }
     } catch (error) {
       return subDays(checkDate, 1).toISOString().substring(0, 10)
     }
 
   } while (isValid);
+}
+
+
+/*
+The method to check how long a certificate is valid checks day by day if the certificate is still valid. 
+In some countries, certificates (boosters, etc.) are valid unlimited period. 
+We assume that if a certificate is valid for more than two years, the certificate 
+is valid indefinitely. This avoids that the actual method continues to check day by day (infinite loop) 
+whether the certificate is valid. 
+**/
+function isValidInfinite(countDays) {
+  return (countDays > 700) ? true : false
 }
 
 function addDays(date, days) {

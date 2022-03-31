@@ -9,6 +9,7 @@ modules:
     requires:
       - name: covidApp-db
       - name: covidApp-uaa
+      - name: covidApp-dest-srv
     provides:
       - name: srv-api
         properties:
@@ -85,11 +86,6 @@ modules:
               sap.cloud.service: cloud.service
 
 resources:
-  - name: external-configurations
-    type: configuration
-    parameters:
-      provider-id: covidApp-sapgraph:srv-api
-
   - name: covidApp-uaa
     type: org.cloudfoundry.managed-service
     parameters:

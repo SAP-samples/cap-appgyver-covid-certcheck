@@ -5,3 +5,6 @@
 **/.DS_Store
 **/node_modules/
 **/package-lock.json
+**/mta_archives/*
+default-env.json
+
