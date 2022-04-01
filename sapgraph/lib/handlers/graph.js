@@ -86,6 +86,9 @@ async function getEmployeeData(authToken){
     //get employee job details
     const empJobUrl = `${graphUri}/${DATA_GRAPH_ID}/${HCM_ENTITY}/EmpJob?$filter=userId eq '${userId}'&$top=1&$select=countryOfCompany,location&$expand=locationNav`;
     const empJobDataFromSF = await querySF(empJobUrl, authToken);
+    const countryCode = empJobDataFromSF.countryOfCompany;
+    const territoryUrl = `${graphUri}/${DATA_GRAPH_ID}/${HCM_ENTITY}/Territory?$filter=territoryCode eq '${countryCode}'`;
+    const territoryDataFromSF = await querySF(territoryUrl, authToken);
     const sfData = {};
     sfData.firstName = firstNameFromSF;
     sfData.lastName = lastNameFromSF;
@@ -93,7 +96,7 @@ async function getEmployeeData(authToken){
     sfData.isContingentWorker = isContingentWorker;
     sfData.startDate = startDate;
     sfData.endDate = endDate;
-    sfData.countryOfCompany = empJobDataFromSF.countryOfCompany;
+    sfData.countryOfCompany = territoryDataFromSF.territoryName;
     sfData.location = empJobDataFromSF.locationNav.name;
     return sfData;
   } else {
