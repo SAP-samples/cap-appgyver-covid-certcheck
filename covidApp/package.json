@@ -25,7 +25,9 @@
         "pako": "^2.0.4",
         "passport": "^0.5.2",
         "sqlite3": "^5.0.2",
-        "zlib": "^1.0.5"
+        "zlib": "^1.0.5",
+        "jimp": "^0.16.1",
+        "qrcode-reader": "^1.0.4"
     },
     "devDependencies": {
         "@sap/hdi-deploy": "^4.2.0",
