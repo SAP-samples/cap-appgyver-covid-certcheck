@@ -22,11 +22,11 @@ const corsOptions = {
 
 //cds.on("bootstrap", app => app.use(cors(corsOptions)));
 cds.on('bootstrap', app => {
+    app.use(express.json({ limit: '50mb' }));
+    app.use(express.urlencoded({ limit: '50mb' }));
 
     const cors = require('cors')
     app.use(cors())
-    app.use(express.json({ limit: '50mb' }));
-    app.use(express.urlencoded({ limit: '50mb' }));
     app.use((req, res, next) => {
         const allowList = ['https://platform.appgyver.com', 'https://preview.appgyver.com'];
         if (allowList.indexOf(req.header('Origin')) !== -1) {
