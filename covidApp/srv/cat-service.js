@@ -1,3 +1,5 @@
+const Jimp = require("jimp");
+const QrCode = require('qrcode-reader');
 const cds = require("@sap/cds");
 const crypto = require("crypto");
 const CovidCertificateVerifier = require('./lib/CovidCertificateVerifier.js')
@@ -27,50 +29,55 @@ module.exports = cds.service.impl(async function () {
     let challenge = base64URLEncode(sha256(verifier));
     return { code_challenge: challenge, code_verifier: verifier };
   });
-  
 
   this.on("decodeQrCode", async req => {
     let qrcodeDecodeValue;
-        let imageBuffer = Buffer.from(req.data.base64String.split(',')[1], 'base64');
-        Jimp.read(imageBuffer, function (err, image) {
-            if (err) console.error(err)
-            var qr = new QrCode();
-            qr.callback = function (err, value) {
-                if (err) console.error(err)
-                qrcodeDecodeValue = value.result;
-            };
-            qr.decode(image.bitmap);
-            console.log(qr);
-        });
 
-    let returnValue = {
-      validUntil: new String()
-    }
-    try {
-      result = await global.verifier.checkCertificate(qrcodeDecodeValue, 'DE', new Date(), true)
-    } catch (error) {
-      if (error instanceof CertificateVerificationException) {
-        req.error({
-          code: 'FUNCTIONALERROR',
-          message: error.toString(),
-          target: 'base64String',
-          status: 418
-        })
-      } else {
-        req.error({
-          code: 'TECHNICALERROR',
-          message: error.toString(),
-          target: 'base64String',
-          status: 419
-        })
+    let validTo = await new Promise((resolve, reject) => {
+      let imageBuffer = Buffer.from(req.data.base64String.split(',')[1], 'base64');
 
-      }
-      return
-    }
-    let endDate = await checkValidityEnd(qrcodeDecodeValue)
-    returnValue.validUntil = endDate
-    await persistValidationResult(req, result, endDate)
-    return JSON.stringify(returnValue)
+      Jimp.read(imageBuffer, async (err, image) => {
+        if (err) console.error(err)
+        var qr = new QrCode();
+        qr.callback = async (err, value) => {
+          if (err) console.error(err)
+          qrcodeDecodeValue = value.result;
+
+          let returnValue = {
+            validUntil: new String()
+          }
+
+          try {
+            result = await global.verifier.checkCertificate(qrcodeDecodeValue, 'DE', new Date(), true)
+          } catch (error) {
+            if (error instanceof CertificateVerificationException) {
+              req.error({
+                code: 'FUNCTIONALERROR',
+                message: error.toString(),
+                target: 'base64String',
+                status: 418
+              })
+            } else {
+              req.error({
+                code: 'TECHNICALERROR',
+                message: error.toString(),
+                target: 'base64String',
+                status: 419
+              })
+
+            }
+            return
+          }
+          let endDate = await checkValidityEnd(qrcodeDecodeValue)
+          returnValue.validUntil = endDate
+          await persistValidationResult(req, result, endDate)
+          resolve(returnValue)
+        };
+        qr.decode(image.bitmap);
+      });
+    });
+
+    return JSON.stringify(validTo)
   })
 
   this.on("decodeCertificateString", async req => {
