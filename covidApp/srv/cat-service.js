@@ -27,6 +27,51 @@ module.exports = cds.service.impl(async function () {
     let challenge = base64URLEncode(sha256(verifier));
     return { code_challenge: challenge, code_verifier: verifier };
   });
+  
+
+  this.on("decodeQrCode", async req => {
+    let qrcodeDecodeValue;
+        let imageBuffer = Buffer.from(req.data.base64String.split(',')[1], 'base64');
+        Jimp.read(imageBuffer, function (err, image) {
+            if (err) console.error(err)
+            var qr = new QrCode();
+            qr.callback = function (err, value) {
+                if (err) console.error(err)
+                qrcodeDecodeValue = value.result;
+            };
+            qr.decode(image.bitmap);
+            console.log(qr);
+        });
+
+    let returnValue = {
+      validUntil: new String()
+    }
+    try {
+      result = await global.verifier.checkCertificate(qrcodeDecodeValue, 'DE', new Date(), true)
+    } catch (error) {
+      if (error instanceof CertificateVerificationException) {
+        req.error({
+          code: 'FUNCTIONALERROR',
+          message: error.toString(),
+          target: 'base64String',
+          status: 418
+        })
+      } else {
+        req.error({
+          code: 'TECHNICALERROR',
+          message: error.toString(),
+          target: 'base64String',
+          status: 419
+        })
+
+      }
+      return
+    }
+    let endDate = await checkValidityEnd(qrcodeDecodeValue)
+    returnValue.validUntil = endDate
+    await persistValidationResult(req, result, endDate)
+    return JSON.stringify(returnValue)
+  })
 
   this.on("decodeCertificateString", async req => {
     let returnValue = {
@@ -53,7 +98,7 @@ module.exports = cds.service.impl(async function () {
       }
       return
     }
-    let endDate = await checkValidityEnd(req)
+    let endDate = await checkValidityEnd(req.data.certificateString)
     returnValue.validUntil = endDate
     await persistValidationResult(req, result, endDate)
     return JSON.stringify(returnValue)
@@ -158,7 +203,7 @@ async function getSFSFDetails(firstName, lastName, req) {
   return result.data
 }
 
-async function checkValidityEnd(req) {
+async function checkValidityEnd(certString) {
   let checkDate = new Date()
   let isValid = true
 
@@ -168,7 +213,7 @@ async function checkValidityEnd(req) {
     checkDate = addDays(checkDate, 1)
     countDays++
     try {
-      let result = await global.verifier.checkCertificate(req.data.certificateString, 'DE', checkDate, false)
+      let result = await global.verifier.checkCertificate(certString, 'DE', checkDate, false)
       //quick and dirty to avoid endless loop
       if (isValidInfinite(countDays)) {
         return new Date("9999-12-31").toISOString().substring(0, 10)
