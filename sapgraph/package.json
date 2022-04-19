@@ -10,8 +10,8 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@sap/graph-toolkit": "^3.0.4",
-    "@sap/logging": "^6.0.3",
+    "@sap/graph-toolkit": "^3.0.5",
+    "@sap/logging": "^6.1.1",
     "@sap/xsenv": "^3.1.1",
     "@sap/xssec": "^3.2.11",
     "express": "4.17.1",
