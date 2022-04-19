@@ -31,7 +31,7 @@ async function handleEmployeeQuery(req, res) {
       if(areStringsSimilar){
         res.status(httpStatus.StatusCodes.OK).json(employeeDataFromSF);
       } else {
-        res.status(httpStatus.StatusCodes.BAD_REQUEST).send('Employee data is not matching with HR system');
+        res.status(httpStatus.StatusCodes.FORBIDDEN).send('Employee data is not matching with HR system');
       }
     } catch(err){
       const errorMessage = err.message? err.message:'Error occured from server';
