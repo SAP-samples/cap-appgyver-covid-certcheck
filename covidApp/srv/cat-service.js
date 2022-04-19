@@ -1,7 +1,6 @@
 const Jimp = require("jimp");
 const QrCode = require('qrcode-reader');
 const cds = require("@sap/cds");
-const crypto = require("crypto");
 const CovidCertificateVerifier = require('./lib/CovidCertificateVerifier.js')
 const CertificateVerificationException = require('./lib/CertificateVerificationException.js')
 const { useOrFetchDestination } = require("@sap-cloud-sdk/connectivity");
@@ -16,19 +15,6 @@ module.exports = cds.service.impl(async function () {
       await global.verifier.init()
     }
   })
-
-  this.on(["READ"], "Books", async (req) => {
-    if (req.user.is("admin")) {
-      return await SELECT.one("Books").where({ ID: 1 });
-    } else {
-      return await SELECT.one("Books").where({ ID: 2 });
-    }
-  });
-  this.on(["READ"], "GenPkce", () => {
-    let verifier = base64URLEncode(crypto.randomBytes(32));
-    let challenge = base64URLEncode(sha256(verifier));
-    return { code_challenge: challenge, code_verifier: verifier };
-  });
 
   this.on("decodeQrCode", async req => {
     let qrcodeDecodeValue;
@@ -123,14 +109,6 @@ module.exports = cds.service.impl(async function () {
 
 });
 
-function base64URLEncode(str) {
-  return str
-    .toString("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=/g, "");
-}
-
 async function persistValidationResult(req, result, endDate) {
   const { Permissions } = cds.entities('covidcheck')
   let firstName = result.nam.gn
@@ -176,10 +154,6 @@ async function persistValidationResult(req, result, endDate) {
     console.log(error)
     req.error(error)
   }
-}
-
-function sha256(buffer) {
-  return crypto.createHash("sha256").update(buffer).digest();
 }
 
 async function getSFSFDetails(firstName, lastName, req) {
