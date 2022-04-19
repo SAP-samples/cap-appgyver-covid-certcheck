@@ -71,24 +71,27 @@ async function getEmployeeData(authToken){
   const userEmail = await getUserEmailFromAuthToken(authToken);
   if(userEmail){
     const graphUri = xsenv.cfServiceCredentials(GRAPH_INSTANCE_NAME).uri;
-    const personIdQueryUrl = `${graphUri}/${DATA_GRAPH_ID}/${HCM_ENTITY}/PerEmail?$filter=isPrimary eq true and emailAddress eq '${userEmail}'&$select=personIdExternal&$top=1`;
-    const response = await querySF(personIdQueryUrl,authToken);
-    const personIdExternal = response.personIdExternal;
-    const empUrl = `${graphUri}/${DATA_GRAPH_ID}/${HCM_ENTITY}/PerPerson?$filter=personIdExternal eq '${personIdExternal}'&$top=1&$expand=personalInfoNav,employmentNav`;
-    const dataFromSF = await querySF(empUrl, authToken);
-    const firstNameFromSF = dataFromSF.personalInfoNav[0].firstName;
-    const lastNameFromSF = dataFromSF.personalInfoNav[0].lastName;
-    const dateOfBirthFromSF = dataFromSF.dateOfBirth;
-    const isContingentWorker = dataFromSF.employmentNav[0].isContingentWorker;
-    const startDate = dataFromSF.employmentNav[0].startDate;
-    const endDate = dataFromSF.employmentNav[0].endDate;
-    const userId = dataFromSF.employmentNav[0].userId;
+    const graphAPI = `${graphUri}/${DATA_GRAPH_ID}/${HCM_ENTITY}`;
+    const personalInfoQueryUrl = `${graphAPI}/PerEmail?$filter=isPrimary eq true and emailAddress eq '${userEmail}'&$select=personIdExternal&$top=1&$expand=personNav($expand=personalInfoNav,employmentNav)`;
+    const personalInfoFromSF = await querySF(personalInfoQueryUrl, authToken);
+    const personNav = personalInfoFromSF.personNav;
+    const personalInfoNav = personNav.personalInfoNav[0];
+    const employmentNav = personNav.employmentNav[0];
+    const firstNameFromSF = personalInfoNav.firstName;
+    const lastNameFromSF = personalInfoNav.lastName;
+    const dateOfBirthFromSF = personalInfoFromSF.dateOfBirth;
+    const isContingentWorker = employmentNav.isContingentWorker;
+    const startDate = employmentNav.startDate;
+    const endDate = employmentNav.endDate;
+    const userId = employmentNav.userId;
     //get employee job details
-    const empJobUrl = `${graphUri}/${DATA_GRAPH_ID}/${HCM_ENTITY}/EmpJob?$filter=userId eq '${userId}'&$top=1&$select=countryOfCompany,location&$expand=locationNav`;
+    const empJobUrl = `${graphAPI}/EmpJob?$filter=userId eq '${userId}'&$top=1&$select=countryOfCompany&$expand=locationNav($select=name)`;
     const empJobDataFromSF = await querySF(empJobUrl, authToken);
     const countryCode = empJobDataFromSF.countryOfCompany;
-    const territoryUrl = `${graphUri}/${DATA_GRAPH_ID}/${HCM_ENTITY}/Territory?$filter=territoryCode eq '${countryCode}'`;
+    const territoryUrl = `${graphAPI}/Territory?$filter=territoryCode eq '${countryCode}'`;
     const territoryDataFromSF = await querySF(territoryUrl, authToken);
+    const photoUrl = `${graphAPI}/Photo?$filter=userId eq '${userId}' and photoType eq 26&$top=1&$select=photo,mimeType`;
+    const photoDataFromSF = await querySF(photoUrl, authToken);
     const sfData = {};
     sfData.firstName = firstNameFromSF;
     sfData.lastName = lastNameFromSF;
@@ -98,6 +101,8 @@ async function getEmployeeData(authToken){
     sfData.endDate = endDate;
     sfData.countryOfCompany = territoryDataFromSF.territoryName;
     sfData.location = empJobDataFromSF.locationNav.name;
+    sfData.mimeType = photoDataFromSF.mimeType;
+    sfData.photo = photoDataFromSF.photo;
     return sfData;
   } else {
     throw new Error("User email not found");
