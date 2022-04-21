@@ -27,7 +27,7 @@ class CovidCertificateVerifier {
         await this.loadValueSets()
     }
 
-    async checkCertificate(certificateString, countryOfOffice, date, logEnabled) {
+    async checkCertificate(certificateString) {
 
         const base45data = certificateString.slice(4)
 
@@ -58,6 +58,10 @@ class CovidCertificateVerifier {
         const payload = cbor.decodeFirstSync(cbor_data)
 
         this.checkDates(payload)
+        return payload;
+    }
+
+    async checkRules(payload, countryOfOffice, date, logEnabled) {
         this.executeRules(payload, countryOfOffice, date, logEnabled)
         return payload.get(this.PAYLOAD).get(1)
     }
