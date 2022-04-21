@@ -1,2 +1,2 @@
-employeeID;firstName;lastName;permissionUntil
-D063937;Max;Streifeneder;2022-01-01
+employeeID;validForCountry;firstName;lastName;permissionUntil
+D063937;DE;Max;Streifeneder;2022-01-01
