@@ -8,6 +8,7 @@ namespace covidcheck;
 entity Permissions : managed {
 
     key employeeID         : String;
+    key validForCountry    : String;
         firstName          : String;
         lastName           : String;
         dateOfBirth        : Date;
