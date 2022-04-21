@@ -54,8 +54,9 @@ module.exports = cds.service.impl(async function () {
 
 async function persistValidationResult(req, result, endDate, validForCountry) {
   const { Permissions } = cds.entities('covidcheck')
-  let firstName = result.nam.gn
-  let lastName = result.nam.fn
+  let payload = result.get(global.verifier.PAYLOAD).get(1)
+  let firstName = payload.nam.gn
+  let lastName = payload.nam.fn
   const empId = req.req.authInfo.getLogonName()
   const tx = cds.tx(req)
   let dbResult, dateOfBirth, location, isContingentWorker, countryOfCompany, mimeType, photo
@@ -208,6 +209,7 @@ async function processCertificateString(req, certificateString, checkForCountry)
         status: 418
       })
     } else {
+      console.error(error.toString())
       req.error({
         code: 'TECHNICALERROR',
         message: error.toString(),
@@ -216,6 +218,7 @@ async function processCertificateString(req, certificateString, checkForCountry)
       })
 
     }
+
     return
   }
   return JSON.stringify(returnValue)
