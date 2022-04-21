@@ -18,6 +18,11 @@ annotate service.Permissions with @(UI.LineItem : [
     },
     {
         $Type : 'UI.DataField',
+        Label : 'Valid for Country',
+        Value : validForCountry,
+    },
+    {
+        $Type : 'UI.DataField',
         Label : 'Date of Birth',
         Value : dateOfBirth,
     },
@@ -96,6 +101,11 @@ annotate service.Permissions with @(
                 $Type : 'UI.DataField',
                 Label : 'Valid Until',
                 Value : permissionUntil,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Valid for Country',
+                Value : validForCountry,
             },
             {
                 $Type : 'UI.DataField',

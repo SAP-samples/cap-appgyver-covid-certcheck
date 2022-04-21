@@ -57,9 +57,6 @@ class CovidCertificateVerifier {
 
         const payload = cbor.decodeFirstSync(cbor_data)
 
-        //right now only the logged on user can upload his own certificate
-        // if (!this.isCertificateOwner(payload, req)) throw new CertificateVerificationException("You are not the owner of the certificate.")
-
         this.checkDates(payload)
         this.executeRules(payload, countryOfOffice, date, logEnabled)
         return payload.get(this.PAYLOAD).get(1)
@@ -163,15 +160,6 @@ class CovidCertificateVerifier {
 
     }
 
-    async isCertificateOwner(certificate, request) {
-        let certificateName = `${certificate.nam.gn} ${certificate.nam.fn}`
-        let requestName = `${req.req.authInfo.getGivenName()} ${req.req.authInfo.getFamilyName()}`
-        const result = await stringSimilarity(certificateName, string2);
-        if (result > 0.8) {
-            return true;
-        }
-        return false;
-    }
 }
 
 module.exports = CovidCertificateVerifier

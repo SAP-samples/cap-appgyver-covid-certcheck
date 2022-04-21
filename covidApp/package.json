@@ -20,14 +20,15 @@
         "cose-js": "^0.8.4",
         "express": "^4",
         "hdb": "^0.19.1",
+        "http-status-codes": "^2.2.0",
+        "jimp": "^0.16.1",
         "jsrsasign": "^10.5.7",
         "node-fetch": "2.6.1",
         "pako": "^2.0.4",
         "passport": "^0.5.2",
+        "qrcode-reader": "^1.0.4",
         "sqlite3": "^5.0.2",
-        "zlib": "^1.0.5",
-        "jimp": "^0.16.1",
-        "qrcode-reader": "^1.0.4"
+        "zlib": "^1.0.5"
     },
     "devDependencies": {
         "@sap/hdi-deploy": "^4.2.0",

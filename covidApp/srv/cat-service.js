@@ -5,7 +5,7 @@ const CovidCertificateVerifier = require('./lib/CovidCertificateVerifier.js')
 const CertificateVerificationException = require('./lib/CertificateVerificationException.js')
 const { useOrFetchDestination } = require("@sap-cloud-sdk/connectivity");
 const { executeHttpRequest } = require("@sap-cloud-sdk/http-client");
-
+const httpStatus = require('http-status-codes');
 
 module.exports = cds.service.impl(async function () {
 
@@ -19,7 +19,7 @@ module.exports = cds.service.impl(async function () {
   this.on("decodeQrCode", async req => {
     let qrcodeDecodeValue;
 
-    let validTo = await new Promise((resolve, reject) => {
+    let result = await new Promise((resolve, reject) => {
       let imageBuffer = Buffer.from(req.data.base64String.split(',')[1], 'base64');
 
       Jimp.read(imageBuffer, async (err, image) => {
@@ -28,73 +28,17 @@ module.exports = cds.service.impl(async function () {
         qr.callback = async (err, value) => {
           if (err) console.error(err)
           qrcodeDecodeValue = value.result;
-
-          let returnValue = {
-            validUntil: new String()
-          }
-
-          try {
-            result = await global.verifier.checkCertificate(qrcodeDecodeValue, 'DE', new Date(), true)
-          } catch (error) {
-            if (error instanceof CertificateVerificationException) {
-              req.error({
-                code: 'FUNCTIONALERROR',
-                message: error.toString(),
-                target: 'base64String',
-                status: 418
-              })
-            } else {
-              req.error({
-                code: 'TECHNICALERROR',
-                message: error.toString(),
-                target: 'base64String',
-                status: 419
-              })
-
-            }
-            return
-          }
-          let endDate = await checkValidityEnd(qrcodeDecodeValue)
-          returnValue.validUntil = endDate
-          await persistValidationResult(req, result, endDate)
-          resolve(returnValue)
+          resolve(await processCertificateString(req, qrcodeDecodeValue, req.data.country))
         };
         qr.decode(image.bitmap);
       });
     });
 
-    return JSON.stringify(validTo)
+    return result
   })
 
   this.on("decodeCertificateString", async req => {
-    let returnValue = {
-      validUntil: new String()
-    }
-    try {
-      result = await global.verifier.checkCertificate(req.data.certificateString, 'DE', new Date(), true)
-    } catch (error) {
-      if (error instanceof CertificateVerificationException) {
-        req.error({
-          code: 'FUNCTIONALERROR',
-          message: error.toString(),
-          target: 'certificateString',
-          status: 418
-        })
-      } else {
-        req.error({
-          code: 'TECHNICALERROR',
-          message: error.toString(),
-          target: 'certificateString',
-          status: 419
-        })
-
-      }
-      return
-    }
-    let endDate = await checkValidityEnd(req.data.certificateString)
-    returnValue.validUntil = endDate
-    await persistValidationResult(req, result, endDate)
-    return JSON.stringify(returnValue)
+    return await processCertificateString(req, req.data.certificateString, req.data.country)
   })
 
   this.on("getAvailableCountries", async req => {
@@ -106,22 +50,22 @@ module.exports = cds.service.impl(async function () {
     return JSON.stringify(result.data)
   })
 
-
 });
 
-async function persistValidationResult(req, result, endDate) {
+async function persistValidationResult(req, result, endDate, validForCountry) {
   const { Permissions } = cds.entities('covidcheck')
   let firstName = result.nam.gn
   let lastName = result.nam.fn
   const empId = req.req.authInfo.getLogonName()
   const tx = cds.tx(req)
-  let dbResult, dateOfBirth, location, isContingentWorker, countryOfCompany
+  let dbResult, dateOfBirth, location, isContingentWorker, countryOfCompany, mimeType, photo
 
   try {
-    ({ dateOfBirth = null, location = null, isContingentWorker = null, countryOfCompany = null } = await getSFSFDetails(firstName, lastName, req))
+    ({ dateOfBirth = null, location = null, isContingentWorker = null, countryOfCompany = null, mimeType = null, photo = null } = await getSFSFDetails(firstName, lastName, req))
   } catch (error) {
     console.error(`${firstName} ${lastName} - erroneous SFSF call`)
     console.error(error.response.data)
+    if (error.response.status == httpStatus.StatusCodes.BAD_REQUEST) throw new CertificateVerificationException("You are not the owner of the certificate.")
   }
 
   let existingPermission = await tx.run(SELECT.one.from(Permissions).where({ employeeID: empId }))
@@ -131,6 +75,7 @@ async function persistValidationResult(req, result, endDate) {
         employeeID: empId,
         firstName: firstName,
         lastName: lastName,
+        validForCountry: validForCountry,
         dateOfBirth: dateOfBirth,
         location: location,
         countryOfCompany: countryOfCompany,
@@ -142,17 +87,24 @@ async function persistValidationResult(req, result, endDate) {
       dbResult = await tx.run(UPDATE(Permissions).set({
         firstName: firstName,
         lastName: lastName,
-        permissionUntil: endDate,
+        validForCountry: validForCountry,
         dateOfBirth: dateOfBirth,
         location: location,
         countryOfCompany: countryOfCompany,
-        isContingentWorker: isContingentWorker
+        isContingentWorker: isContingentWorker,
+        permissionUntil: endDate,
       }).where({ employeeID: empId }))
       console.log(`updated permission for ${empId} until ${endDate}`)
     }
   } catch (error) {
     console.log(error)
     req.error(error)
+  }
+
+  return {
+    fullName: `${firstName} ${lastName}`,
+    photo: photo,
+    mimeType: mimeType
   }
 }
 
@@ -184,7 +136,7 @@ async function getSFSFDetails(firstName, lastName, req) {
   return result.data
 }
 
-async function checkValidityEnd(certString) {
+async function checkValidityEnd(certString, country) {
   let checkDate = new Date()
   let isValid = true
 
@@ -194,7 +146,7 @@ async function checkValidityEnd(certString) {
     checkDate = addDays(checkDate, 1)
     countDays++
     try {
-      let result = await global.verifier.checkCertificate(certString, 'DE', checkDate, false)
+      let result = await global.verifier.checkCertificate(certString, country, checkDate, false)
       //quick and dirty to avoid endless loop
       if (isValidInfinite(countDays)) {
         return new Date("9999-12-31").toISOString().substring(0, 10)
@@ -205,7 +157,6 @@ async function checkValidityEnd(certString) {
 
   } while (isValid);
 }
-
 
 /*
 The method to check how long a certificate is valid checks day by day if the certificate is still valid. 
@@ -228,6 +179,45 @@ function subDays(date, days) {
   var result = new Date(date)
   result.setDate(result.getDate() - days)
   return result;
+}
+
+async function processCertificateString(req, certificateString, checkForCountry) {
+  let endDate
+  let returnValue = {
+    validUntil: new String(),
+    name: new String(),
+    message: 'Validation succesful',
+    photo: new String(),
+    status: 200
+  }
+  try {
+    result = await global.verifier.checkCertificate(certificateString, checkForCountry, new Date(), true)
+    endDate = await checkValidityEnd(certificateString, checkForCountry);
+    ({ fullName, photo, mimeType } = await persistValidationResult(req, result, endDate, checkForCountry))
+    returnValue.photo = `data:image/png;base64,${photo}`
+    returnValue.name = fullName
+    returnValue.validUntil = endDate
+    returnValue.country = checkForCountry
+  } catch (error) {
+    if (error instanceof CertificateVerificationException) {
+      req.error({
+        code: 'FUNCTIONALERROR',
+        message: error.toString(),
+        target: 'certificateString',
+        status: 418
+      })
+    } else {
+      req.error({
+        code: 'TECHNICALERROR',
+        message: error.toString(),
+        target: 'certificateString',
+        status: 419
+      })
+
+    }
+    return
+  }
+  return JSON.stringify(returnValue)
 }
 
 
