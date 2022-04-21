@@ -168,7 +168,7 @@ is valid indefinitely. This avoids that the actual method continues to check day
 whether the certificate is valid. 
 **/
 function isValidInfinite(countDays) {
-  return (countDays > 700) ? true : false
+  return (countDays > 400) ? true : false
 }
 
 function addDays(date, days) {
@@ -196,7 +196,7 @@ async function processCertificateString(req, certificateString, checkForCountry)
     const payload = await global.verifier.checkCertificate(certificateString)
     endDate = await checkValidityEnd(certificateString, checkForCountry);
     let fullName, photo, mimeType;
-    ( { fullName, photo, mimeType } = await persistValidationResult(req, payload, endDate, checkForCountry))
+    ({ fullName, photo, mimeType } = await persistValidationResult(req, payload, endDate, checkForCountry))
     returnValue.photo = `data:${mimeType};base64,${photo}`
     returnValue.name = fullName
     returnValue.validUntil = endDate
