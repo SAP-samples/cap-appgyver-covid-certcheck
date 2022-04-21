@@ -66,7 +66,7 @@ async function persistValidationResult(req, result, endDate, validForCountry) {
   } catch (error) {
     console.error(`${firstName} ${lastName} - erroneous SFSF call`)
     console.error(error.response.data)
-    if (error.response.status == httpStatus.StatusCodes.BAD_REQUEST) throw new CertificateVerificationException("You are not the owner of the certificate.")
+    if (error.response.status == httpStatus.StatusCodes.FORBIDDEN) throw new CertificateVerificationException("You are not the owner of the certificate.")
   }
 
   let existingPermission = await tx.run(SELECT.one.from(Permissions).where({ employeeID: empId }))
