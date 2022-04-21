@@ -79,7 +79,7 @@ async function getEmployeeData(authToken){
     const employmentNav = personNav.employmentNav[0];
     const firstNameFromSF = personalInfoNav.firstName;
     const lastNameFromSF = personalInfoNav.lastName;
-    const dateOfBirthFromSF = personalInfoFromSF.dateOfBirth;
+    const dateOfBirthFromSF = personNav.dateOfBirth;
     const isContingentWorker = employmentNav.isContingentWorker;
     const startDate = employmentNav.startDate;
     const endDate = employmentNav.endDate;

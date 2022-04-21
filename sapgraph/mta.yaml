@@ -1,13 +1,13 @@
 _schema-version: "3.1"
-ID: sapgraph
+ID: sapgraph2
 description: A simple AppGyver App.
 version: 1.0.0
 modules:
-- name: covidApp-sapgraph
+- name: covidApp-sapgraph2
   type: nodejs
   path: .
   parameters:
-    host: covidapp-sapgraph-${space}
+    host: covidapp-sapgraph2-${space}
     memory: 256MB
     enable-ssh: true
   requires: 
