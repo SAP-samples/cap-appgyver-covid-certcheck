@@ -148,7 +148,7 @@ async function checkValidityEnd(certString, country) {
     checkDate = addDays(checkDate, 1)
     countDays++
     try {
-      let result = await global.verifier.checkCertificate(certString, country, checkDate, false)
+      let result = await global.verifier.checkRules(certString, country, checkDate, false)
       //quick and dirty to avoid endless loop
       if (isValidInfinite(countDays)) {
         return new Date("9999-12-31").toISOString().substring(0, 10)
@@ -193,10 +193,11 @@ async function processCertificateString(req, certificateString, checkForCountry)
     status: 200
   }
   try {
-    result = await global.verifier.checkCertificate(certificateString, checkForCountry, new Date(), true)
+    const payload = await global.verifier.checkCertificate(certificateString)
     endDate = await checkValidityEnd(certificateString, checkForCountry);
-    ({ fullName, photo, mimeType } = await persistValidationResult(req, result, endDate, checkForCountry))
-    returnValue.photo = `data:image/png;base64,${photo}`
+    let fullName, photo, mimeType;
+    ( { fullName, photo, mimeType } = await persistValidationResult(req, payload, endDate, checkForCountry))
+    returnValue.photo = `data:${mimeType};base64,${photo}`
     returnValue.name = fullName
     returnValue.validUntil = endDate
     returnValue.country = checkForCountry
