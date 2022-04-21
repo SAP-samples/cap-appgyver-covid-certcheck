@@ -68,13 +68,6 @@ Content-Type: application/json
 
 ###
 
-GET {{capEndpoint}}/rest/verification/testGraphService()
-Authorization: Bearer {{id_token}}
-Accept: application/json
-Content-Type: application/json
-
-###
-
 DELETE {{capEndpoint}}/permissions/Permissions('D063937')
 
 ###

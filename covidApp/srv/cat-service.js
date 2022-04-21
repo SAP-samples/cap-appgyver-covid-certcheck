@@ -45,11 +45,6 @@ module.exports = cds.service.impl(async function () {
     return global.verifier.availableCountries
   })
 
-  this.on("testGraphService", async req => {
-    let result = getSFSFDetails('Maximilian', 'Streifeneder', req)
-    return JSON.stringify(result.data)
-  })
-
 });
 
 async function persistValidationResult(req, result, endDate, validForCountry) {
