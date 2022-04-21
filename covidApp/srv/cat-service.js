@@ -32,9 +32,10 @@ module.exports = cds.service.impl(async function () {
           let returnValue = {
             validUntil: new String()
           }
-
+          let payload;
           try {
-            result = await global.verifier.checkCertificate(qrcodeDecodeValue, 'DE', new Date(), true)
+            payload = await global.verifier.checkCertificate(qrcodeDecodeValue)
+            result = await global.verifier.checkRules(payload, 'DE', new Date(), true)
           } catch (error) {
             if (error instanceof CertificateVerificationException) {
               req.error({
@@ -54,7 +55,7 @@ module.exports = cds.service.impl(async function () {
             }
             return
           }
-          let endDate = await checkValidityEnd(qrcodeDecodeValue)
+          let endDate = await checkValidityEnd(payload)
           returnValue.validUntil = endDate
           await persistValidationResult(req, result, endDate)
           resolve(returnValue)
@@ -70,8 +71,10 @@ module.exports = cds.service.impl(async function () {
     let returnValue = {
       validUntil: new String()
     }
+    let payload;
     try {
-      result = await global.verifier.checkCertificate(req.data.certificateString, 'DE', new Date(), true)
+      payload = await global.verifier.checkCertificate(req.data.certificateString)
+      result = await global.verifier.checkRules(payload, 'DE', new Date(), true)
     } catch (error) {
       if (error instanceof CertificateVerificationException) {
         req.error({
@@ -91,9 +94,9 @@ module.exports = cds.service.impl(async function () {
       }
       return
     }
-    let endDate = await checkValidityEnd(req.data.certificateString)
+    let endDate = await checkValidityEnd(payload)
     returnValue.validUntil = endDate
-    await persistValidationResult(req, result, endDate)
+    //await persistValidationResult(req, result, endDate)
     return JSON.stringify(returnValue)
   })
 
@@ -184,7 +187,7 @@ async function getSFSFDetails(firstName, lastName, req) {
   return result.data
 }
 
-async function checkValidityEnd(certString) {
+async function checkValidityEnd(payload) {
   let checkDate = new Date()
   let isValid = true
 
@@ -194,7 +197,7 @@ async function checkValidityEnd(certString) {
     checkDate = addDays(checkDate, 1)
     countDays++
     try {
-      let result = await global.verifier.checkCertificate(certString, 'DE', checkDate, false)
+      let result = await global.verifier.checkRules(payload, 'DE', checkDate, false)
       //quick and dirty to avoid endless loop
       if (isValidInfinite(countDays)) {
         return new Date("9999-12-31").toISOString().substring(0, 10)
@@ -215,7 +218,7 @@ is valid indefinitely. This avoids that the actual method continues to check day
 whether the certificate is valid. 
 **/
 function isValidInfinite(countDays) {
-  return (countDays > 400) ? true : false
+  return (countDays > 700) ? true : false
 }
 
 function addDays(date, days) {
@@ -229,7 +232,5 @@ function subDays(date, days) {
   result.setDate(result.getDate() - days)
   return result;
 }
-
-
 
 
