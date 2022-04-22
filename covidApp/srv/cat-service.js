@@ -163,7 +163,7 @@ is valid indefinitely. This avoids that the actual method continues to check day
 whether the certificate is valid. 
 **/
 function isValidInfinite(countDays) {
-  return (countDays > 400) ? true : false
+  return (countDays > 700) ? true : false
 }
 
 function addDays(date, days) {
