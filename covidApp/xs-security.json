@@ -12,7 +12,7 @@
   "attributes": [],
   "role-templates": [{
     "name": "admin",
-    "description": "generated",
+    "description": "CovidApp admin role",
     "scope-references": [
       "$XSAPPNAME.admin"
     ],
@@ -27,9 +27,9 @@
   }],
   "oauth2-configuration": {
     "redirect-uris": [
+      "https://localhost/",
       "http://localhost:5001/",
-      "https://technical-field-enablement-covidapp-4l1ifcm7-*.cfapps.eu10.hana.ondemand.com/",
-      "https://localhost/"
+      "https://*.cfapps.*.hana.ondemand.com/**"
     ]
   }
 }
