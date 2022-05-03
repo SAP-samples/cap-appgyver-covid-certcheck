@@ -6,7 +6,7 @@ Learn how to configure a new AppGyver app that allows you to upload screenshots 
 
 ---
 
-### Create a new AppGyver app
+## Create a new AppGyver app
 
 1. Go to your SAP BTP Subaccount and subscribe to the SAP AppGyver service offering. 
 
@@ -18,7 +18,7 @@ Learn how to configure a new AppGyver app that allows you to upload screenshots 
 
 ---
 
-### Enable authentication 
+## Enable authentication 
 
 1. Switch to the **Auth** tab of your project and add Authentication. 
     ![AppGyver](./images/image1.png)
@@ -52,7 +52,7 @@ Learn how to configure a new AppGyver app that allows you to upload screenshots 
 
 ---
 
-### Setup your navigation
+## Setup your navigation
 
 1. Before you setup the navigation, rename the initial **Empty page** which was created by SAP AppGyver automatically. Therefore switch to the page overview and select the Empty page. 
     ![AppGyver](./images/image11.png)
@@ -69,14 +69,14 @@ Learn how to configure a new AppGyver app that allows you to upload screenshots 
 
 ---
 
-### Apply the SAP Fiori theme
+## Apply the SAP Fiori theme
 
 Apply the SAP Fiori theme to your your project in the **Theme** tab of SAP AppGyver. Details can be found in the screenshot. 
 ![AppGyver](./images/image16.png)
 
 ---
 
-### Add variables to your app
+## Add variables to your app
 
 Your SAP AppGyver app will need a variety of variables to store information like access tokens or business data. 
 
@@ -93,7 +93,7 @@ Your SAP AppGyver app will need a variety of variables to store information like
 
 ---
 
-### Create your login view
+## Create your login view
 
 1. Open the **OAuth** page and follow the screenshot details.  
     ![AppGyver](./images/image21.png)
@@ -112,7 +112,7 @@ Your SAP AppGyver app will need a variety of variables to store information like
 
 ---
     
-### Create your Login View logic
+## Create your Login View logic
 
 1. Being on the **OAuth** page, open the SAP AppGyver logic section in the bottom of the screen. This is where you will configure the logic applied when the OAuth page is loaded. 
 
@@ -208,7 +208,7 @@ Your SAP AppGyver app will need a variety of variables to store information like
 
 ---
 
-### Create your Login View authentication logic
+## Create your Login View authentication logic
 
 1. Being on the **OAuth** page, open the SAP AppGyver logic section in the bottom of the screen. This is where you will configure the logic applied when the user authenticated using SAP Identity Authentication service. 
 
@@ -289,7 +289,7 @@ Your SAP AppGyver app will need a variety of variables to store information like
 
 ---
 
-### Create your Office Access - Covid Check view logic flow
+## Create your Office Access - Covid Check view logic flow
 
 1. Being on the **Office Access - Covid Check** page, open the SAP AppGyver logic section in the bottom of the screen. This is where you will configure the logic applied when the content page is loaded. 
 
@@ -358,7 +358,7 @@ Your SAP AppGyver app will need a variety of variables to store information like
 
 ---
 
-### Create your Office Access - Covid Check view
+## Create your Office Access - Covid Check view
 
 1. Being on the **Office Access - Covid Check** page, open the view design canvas. This is where you will configure the logic applied when the content page is loaded. 
 
@@ -475,7 +475,7 @@ Your SAP AppGyver app will need a variety of variables to store information like
 
 ---
 
-### Create your Office Access - Covid Check validation logic
+## Create your Office Access - Covid Check validation logic
 
 1. Being on the **Office Access - Covid Check** page, open the SAP AppGyver logic section in the bottom of the screen. This is where you will configure the logic applied when the content page is loaded. 
 
@@ -654,13 +654,9 @@ Your SAP AppGyver app will need a variety of variables to store information like
 
 ---
 
-### Launch your app
+## Launch your app
 
 You can launch your app initially from the **Launch** tab. Therefore we recommend to use the SAP AppGyver app which is available in the Google or Apple app stores. Just scan the QR code and the app will start on your device. 
 
 ![AppGyver](./images/image13.png)
-
----
-
-### Setup your navigation
 

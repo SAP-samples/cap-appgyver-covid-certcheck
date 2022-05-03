@@ -44,12 +44,18 @@ Subscriptions required in your SAP Business Technology Platform Account:
 ## Setup and Configuration
 
 ### [Step 1: Security setup](./tutorials/1_SecuritySetup/README.md) 
+
+In this part of the tutorial you will learn how to setup the security related aspects of your scenario. The security setup will allow you secure access to your CAP REST endpoints using the so called PKCE flow. Therefore you will use SAP Identity Authentication service and integrate it with your CAP service secured by SAP XSUAA. 
+
 (Martin & Jim - Uwe the "Validation Monkey")
 ### [Step 2: Backend application](./tutorials/2_BackendApplication/README.md)
 (Max)
 ### [Step 3: Graph application](./tutorials/3_GraphApplication/README.md)
 (Praveen)
 ### [Step 4: AppGyver app](./tutorials/4_AppGyverApp/README.md)
+
+In this part of the tutorial you will learn how to setup and configure your SAP AppGyver app including a secure access to your CAP REST endpoints. The SAP AppGyver app will allow you to upload or scan Covid vacination or test certificates. The certificate will be checked in the CAP service and the validation result will be displayed and stored in the app. 
+
 (Martin & Jim - Uwe the "Validation Monkey")
 ### [Step 5: Test cases](./tutorials/5_TestCases/README.md)
 (Nani)
