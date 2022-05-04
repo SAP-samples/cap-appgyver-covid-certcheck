@@ -190,6 +190,7 @@ Your SAP AppGyver app will need a variety of variables to store information like
     >[<img src="./images/image51.png" width="100">](./images/image51.png)
 
     >#12 JS - Java Script <br>
+    > **JavaScript Code**: [Click here](https://github.com/SAP-samples/appgyver-auth-flows/blob/main/appGyver/pkceCoding.js) (Please check the **licenses** of the polyfills used!) <br>
     >[<img src="./images/image52.png" width="100">](./images/image52.png)
     >[<img src="./images/image54.png" width="100">](./images/image54.png)
     >[<img src="./images/image55.png" width="100">](./images/image55.png)
@@ -234,6 +235,15 @@ Your SAP AppGyver app will need a variety of variables to store information like
     >[<img src="./images/image191.png" width="100">](./images/image191.png)
 
     >#2 JS - JavaScript <br>
+    > **JavaScript Code**: 
+    > ```
+    > if(inputs.input1.url.includes('localhost/?code')){
+    >    var code = inputs.input1.url.split('code=')[1].split('&state')[0];
+    >    return { code : code, codeAvailable: true } 
+    > }else{
+    >    return { codeAvailable: false } 
+    > }
+    > ```
     >[<img src="./images/image219.png" width="100">](./images/image219.png)
     >[<img src="./images/image218.png" width="100">](./images/image218.png)
     >[<img src="./images/image217.png" width="100">](./images/image217.png)
