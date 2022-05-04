@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Learn how to configure a new AppGyver app that allows you to upload screenshots or scans of Covid vacination certificates to your SAP CAP OData service. After successfull validation of the certificate, the app will display the validity date and status retreived by your service. 
+Learn how to configure a new AppGyver app that allows you to upload screenshots or scans of Covid vacination certificates to your CAP OData service. After successfull validation of the certificate, the app will display the validity date and status retreived by your service. 
 
 ---
 
@@ -296,16 +296,19 @@ Your SAP AppGyver app will need a variety of variables to store information like
 2. Please add the following components to your logic flow and connect them as depicted, before you start with the individual component configurations. 
     ![AppGyver](./images/image63.png)
 
-    | #  |     Type     |       Feature         |
-    |----|:------------:|----------------------:|
-    | 1  | Event        | Page mounted          |
-    | 2  | Storage      | Get item from storage |
-    | 3  | Variables    | Set app variable      |
-    | 4  | Storage      | Get item from storage |
-    | 5  | Variables    | Set app variable      |
-    | 6  | Data         | HTTP request          |
-    | 7  | Variables    | Set page variable     |
-    | 8  | View         | Hide spinner          |
+    | #  |     Type     |       Feature                 |
+    |----|:------------:|------------------------------:|
+    | 1  | Event        | Page mounted                  |
+    | 2  | Storage      | Get item from storage         |
+    | 3  | Variables    | Set app variable              |
+    | 4  | Storage      | Get item from storage         |
+    | 5  | Variables    | Set app variable              |
+    | 6  | Data         | HTTP request                  |
+    | 7  | Variables    | Set page variable             |
+    | 8  | View         | Hide spinner                  |
+    | 9  | Event        | App variable 'auth' changed   |
+    | 10 | Event        | Page focused                  |
+    | 11 | Utility      | If condition                  |
 
     >#1 Event - Page mounted <br>
     >[<img src="./images/image64.png" width="100">](./images/image64.png)
@@ -341,7 +344,7 @@ Your SAP AppGyver app will need a variety of variables to store information like
     >[<img src="./images/image79.png" width="100">](./images/image79.png)
 
     >#6 Data - HTTP request <br>
-    >**URL**: https://`<<SAP CAP service endpoint e.g. sap-dev-covidapp-srv.cfapps.eu10.hana.ondemand.com>>`/rest/verification/getAvailableCountries<br>
+    >**URL**: https://`<<CAP service endpoint e.g. sap-dev-covidapp-srv.cfapps.eu10.hana.ondemand.com>>`/rest/verification/getAvailableCountries<br>
     >[<img src="./images/image80.png" width="100">](./images/image80.png)
     >[<img src="./images/image81.png" width="100">](./images/image81.png)
     >[<img src="./images/image82.png" width="100">](./images/image82.png)
@@ -353,8 +356,19 @@ Your SAP AppGyver app will need a variety of variables to store information like
     >[<img src="./images/image85.png" width="100">](./images/image85.png)
     >[<img src="./images/image86.png" width="100">](./images/image86.png)
 
-    >#8 View - hide spinner <br>
+    >#8 View - Hide spinner <br>
     >[<img src="./images/image87.png" width="100">](./images/image87.png)
+
+    >#9 Event - App variable 'auth' changed <br>
+    >[<img src="./images/image87_1.png" width="100">](./images/image87_1.png)
+
+    >#10 Event - Page focused <br>
+    >[<img src="./images/image87_2.png" width="100">](./images/image87_2.png)
+
+    >#11 Utility - If condition <br>
+    >**Condition (Formula)**: IS_NULLY(appVars.auth.idToken)<br>
+    >[<img src="./images/image87_3.png" width="100">](./images/image87_3.png)
+    >[<img src="./images/image87_4.png" width="100">](./images/image87_4.png)
 
 ---
 
@@ -508,7 +522,7 @@ Your SAP AppGyver app will need a variety of variables to store information like
     >[<img src="./images/image151.png" width="100">](./images/image151.png)
 
     >4 Data - HTTP request <br>
-    >**URL**: https://`<<SAP CAP service endpoint e.g. sap-dev-covidapp-srv.cfapps.eu10.hana.ondemand.com>>`/rest/verification/decodeCertificateString<br>
+    >**URL**: https://`<<CAP service endpoint e.g. sap-dev-covidapp-srv.cfapps.eu10.hana.ondemand.com>>`/rest/verification/decodeCertificateString<br>
     >[<img src="./images/image152.png" width="100">](./images/image152.png)
     >[<img src="./images/image153.png" width="100">](./images/image153.png)
     >[<img src="./images/image154.png" width="100">](./images/image154.png)
@@ -598,7 +612,7 @@ Your SAP AppGyver app will need a variety of variables to store information like
     >[<img src="./images/image186.png" width="100">](./images/image186.png)
 
     >5 Data - HTTP request <br>
-    >**URL**: https://`<<SAP CAP service endpoint e.g. sap-dev-covidapp-srv.cfapps.eu10.hana.ondemand.com>>`/rest/verification/decodeQrCode<br>
+    >**URL**: https://`<<CAP service endpoint e.g. sap-dev-covidapp-srv.cfapps.eu10.hana.ondemand.com>>`/rest/verification/decodeQrCode<br>
     >[<img src="./images/image187.png" width="100">](./images/image187.png)
     >[<img src="./images/image188.png" width="100">](./images/image188.png)
     >[<img src="./images/image189.png" width="100">](./images/image189.png)

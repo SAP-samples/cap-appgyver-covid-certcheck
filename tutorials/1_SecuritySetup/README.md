@@ -10,11 +10,18 @@ https://blogs.sap.com/2022/03/22/sap-appgyver-and-proof-key-for-code-exchange-pk
 
 The blog post covers the topic of **Proof Key for Code Exchange (PKCE)** which is an OAuth authorization grant type relevant for mobile clients not being capable of storing a client secret for authentication purposes. 
 
+Instead of using SAP XSUAA for user authentication, in this scenario the SAP Identity Authentication Service (SAP IAS)  will be used. Based on the convenient XSUAA cross-consumption feature, the respective OAuth token can be be used to seamlessly access your SAP XSUAA based application like CAP apps. 
+
+Therefore, in the following you will first create a new SAP Identity Authentication service instance (if not available yet). Then you will need to setup the trust between your SAP BTP XSUAA subaccount instance and your SAP Identity Authentication instance. 
+
+In the next step you can create a new application registration in SAP IAS and a corresponding SAP XSUAA service instance providing the required roles on the SAP BTP side. Finally you will map the SAP IAS group assignments to SAP BTP XSUAA role collections before testing the actual token exchange feature between the two authentication tools. 
+
+
 ---
 
-## Setup a SAP Identity Authentication instance
+## Setup an SAP Identity Authentication Service tenant
 
->If you don't have an existing SAP Identity Authentication instance in your landscape, please follow the steps in the official [SAP Help](https://help.sap.com/docs/IDENTITY_AUTHENTICATION/6d6d63354d1242d185ab4830fc04feb1/93160ebd2dcb40e98aadcbb9a970f2b9.html?locale=en-US#getting-a-tenant) guide to enable it for this scenario. You can check in the **Trust Configuration** of your SAP BTP subaccount if there is a SAP Identity Authentication tenant available for your customer ID and establish the required trust (if not yet done already).
+>If you don't have an existing SAP Identity Authentication Service tenant in your landscape, please follow the steps in the official [SAP Help](https://help.sap.com/docs/IDENTITY_AUTHENTICATION/6d6d63354d1242d185ab4830fc04feb1/93160ebd2dcb40e98aadcbb9a970f2b9.html?locale=en-US#getting-a-tenant) guide to enable it for this scenario. You can check in the **Trust Configuration** of your SAP BTP subaccount if there is an SAP Identity Authentication tenant available for your customer ID and establish the required trust (if not yet done already).
 >![Trust setup](./images/image04.png)
 
 A default instance of **SAP Identity Services** (Identity Authentication/Identity Provisioning) can be used for free by every **SAP BTP PAYGO** or **CPEA** customer given a few conditions. This includes developers signing up for **SAP BTP Free Tier** PAYGO scenarios. The free usage covers all setups in which access to or between official SAP solutions (on-premise and cloud) and applications provisioned on SAP BTP is authenticated. In case of authentication requirements to **3rd party applications** (not deployed on SAP BTP), an **additional license** is required, where a payment is based on number of logins. Please familiarize yourself with the official and latest "SAP Business Technology Platform service description guide" to find more details on free usage allowance. The service description guide is the **legal and binding document** when it comes to licensing questions. 
