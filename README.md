@@ -26,7 +26,7 @@ The required systems and components are:
 
 - SAP BTP PAYGO (e.g. Free Tier) or CPEA contract
 - SAP SuccessFactors system
-- Covid vacination certificate
+- Covid vaccination certificate
 
 Entitlements/Quota required in your SAP Business Technology Platform Account:
 
@@ -67,7 +67,7 @@ In this part of the tutorial you will learn how to setup the security related as
 
 ### [Step 4: AppGyver app](./tutorials/4_AppGyverApp/README.md)
 
-In this part of the tutorial you will learn how to setup and configure your SAP AppGyver app including a secure access to your CAP REST endpoints. The SAP AppGyver app will allow you to upload or scan Covid vacination or test certificates. The certificate will be checked in the CAP service and the validation result will be displayed and stored in the SAP AppGyver app. 
+In this part of the tutorial you will learn how to setup and configure your SAP AppGyver app including a secure access to your CAP REST endpoints. The SAP AppGyver app will allow you to upload or scan Covid vaccination or test certificates. The certificate will be checked in the CAP service and the validation result will be displayed and stored in the SAP AppGyver app. 
 
 (Martin & Jim - Uwe the "Validation Monkey")
 ### [Step 5: Test cases](./tutorials/5_TestCases/README.md)

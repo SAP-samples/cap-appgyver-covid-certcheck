@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Learn how to setup the security related services for your application. As the respective services will be part of the actual CAP application and the SAP AppGyver app, they need to be configured before you start the acutal development of your other components. 
+Learn how to setup the security related services for your application. As the respective services will be part of the actual CAP application and the SAP AppGyver app, they need to be configured before you start the actual development of your other components. 
 
 For this part of the tutorial we recommend studying the following blog post and corresponding GitHub repository first, which will be linked and reused throughout the next steps. 
 
@@ -10,9 +10,9 @@ https://blogs.sap.com/2022/03/22/sap-appgyver-and-proof-key-for-code-exchange-pk
 
 The blog post covers the topic of **Proof Key for Code Exchange (PKCE)** which is an OAuth authorization grant type relevant for mobile clients not being capable of storing a client secret for authentication purposes. 
 
-Instead of using SAP XSUAA for user authentication, in this scenario the SAP Identity Authentication Service (SAP IAS)  will be used. Based on the convenient XSUAA cross-consumption feature, the respective OAuth token can be be used to seamlessly access your SAP XSUAA based application like CAP apps. 
+Instead of using SAP XSUAA for user authentication, in this scenario the SAP Identity Authentication Service tenant (SAP IAS)  will be used. Based on the convenient XSUAA cross-consumption feature, the respective OAuth token can be used to seamlessly access your SAP XSUAA based application like CAP apps. 
 
-Therefore, in the following you will first create a new SAP Identity Authentication service instance (if not available yet). Then you will need to setup the trust between your SAP BTP XSUAA subaccount instance and your SAP Identity Authentication instance. 
+Therefore, in the following you will first create a new SAP Identity Authentication Service tenant (if not available yet). Then you will need to setup the trust between your SAP BTP subaccount XSUAA instance and your SAP Identity Authentication Service tenant. 
 
 In the next step you can create a new application registration in SAP IAS and a corresponding SAP XSUAA service instance providing the required roles on the SAP BTP side. Finally you will map the SAP IAS group assignments to SAP BTP XSUAA role collections before testing the actual token exchange feature between the two authentication tools. 
 
@@ -21,7 +21,7 @@ In the next step you can create a new application registration in SAP IAS and a 
 
 ## Setup an SAP Identity Authentication Service tenant
 
->If you don't have an existing SAP Identity Authentication Service tenant in your landscape, please follow the steps in the official [SAP Help](https://help.sap.com/docs/IDENTITY_AUTHENTICATION/6d6d63354d1242d185ab4830fc04feb1/93160ebd2dcb40e98aadcbb9a970f2b9.html?locale=en-US#getting-a-tenant) guide to enable it for this scenario. You can check in the **Trust Configuration** of your SAP BTP subaccount if there is an SAP Identity Authentication tenant available for your customer ID and establish the required trust (if not yet done already).
+>If you don't have an existing SAP Identity Authentication Service tenant in your landscape, please follow the steps in the official [SAP Help](https://help.sap.com/docs/IDENTITY_AUTHENTICATION/6d6d63354d1242d185ab4830fc04feb1/93160ebd2dcb40e98aadcbb9a970f2b9.html?locale=en-US#getting-a-tenant) guide to enable it for this scenario. You can check in the **Trust Configuration** of your SAP BTP subaccount if there is an SAP Identity Authentication Service tenant available for your customer ID and establish the required trust (if not yet done already).
 >![Trust setup](./images/image04.png)
 
 A default instance of **SAP Identity Services** (Identity Authentication/Identity Provisioning) can be used for free by every **SAP BTP PAYGO** or **CPEA** customer given a few conditions. This includes developers signing up for **SAP BTP Free Tier** PAYGO scenarios. The free usage covers all setups in which access to or between official SAP solutions (on-premise and cloud) and applications provisioned on SAP BTP is authenticated. In case of authentication requirements to **3rd party applications** (not deployed on SAP BTP), an **additional license** is required, where a payment is based on number of logins. Please familiarize yourself with the official and latest "SAP Business Technology Platform service description guide" to find more details on free usage allowance. The service description guide is the **legal and binding document** when it comes to licensing questions. 
@@ -38,9 +38,9 @@ Samples for **free usage scenarios**:
 
 ---
 
-## SAP XSUAA - SAP Identity Authentication trust
+## SAP XSUAA - SAP Identity Authentication Service trust
 
-To setup the required trust between the SAP XSUAA instance of your SAP BTP subaccount and your SAP Identity Authentication service, please follow the steps of the following tutorial ([click here](https://github.com/SAP-samples/appgyver-auth-flows/#sap-xsuaa---sap-identity-authentication-trust)). 
+To setup the required trust between the SAP XSUAA instance of your SAP BTP subaccount and your SAP Identity Authentication Service, please follow the steps of the following tutorial ([click here](https://github.com/SAP-samples/appgyver-auth-flows/#sap-xsuaa---sap-identity-authentication-trust)). 
 
 ---
 
@@ -50,7 +50,7 @@ To create a new application registration in your SAP Identiy Authentication serv
 
 Feel free to adjust further settings of your SAP IAS application registrations like the token validity or "Remember me" settings if required. You can also allow login using a corporate identity provider like Azure Active Directory if required. 
 
->**Note** - If your SAP Identity Authentication tenant is not multi-tenant enabled, please remove the property in case of failures.
+>**Note** - If your SAP Identity Authentication Service tenant is not multi-tenant enabled, please remove the property in case of failures.
 
 ```
 {
@@ -121,15 +121,15 @@ To create a new SAP XSUAA service instance in your SAP BTP subaccount, please fo
 
 ## SAP IAS user groups and role collection mapping
 
-To create the relevant user groups in SAP Identity Authentication and respective role collection mappings on the SAP BTP side, please follow the steps of the following tutorial ([click here](https://github.com/SAP-samples/appgyver-auth-flows/#sap-ias-user-group-and-role-collection-mapping)). 
+To create the relevant user groups in SAP Identity Authentication Service and respective role collection mappings on the SAP BTP side, please follow the steps of the following tutorial ([click here](https://github.com/SAP-samples/appgyver-auth-flows/#sap-ias-user-group-and-role-collection-mapping)). 
 
 In SAP IAS create a user group called **Covid App** and another user group called **Covid App Admin**. Add the desired SAP IAS users to the respective groups. 
 
 ![IAS groups](./images/image03.png)
 
-In SAP BTP create two new role collections and name them like the user groups createdin SAP Identity Authentication (**Covid App** & **Covid App Admin**). Whereas the admin role collection needs requires the assignment of the respective **admin** and **Token_Exchange** role, please only assign the **Token_Exchange** role to the standard role (see below). 
+In SAP BTP create two new role collections and name them like the user groups createdin SAP Identity Authentication Service (**Covid App** & **Covid App Admin**). Whereas the admin role collection needs requires the assignment of the respective **admin** and **Token_Exchange** role, please only assign the **Token_Exchange** role to the standard role (see below). 
 
-Please don't forget to create the respective group mapping for the user groups created in SAP Identity Authentication. 
+Please don't forget to create the respective group mapping for the user groups created in SAP Identity Authentication Service. 
 
 ![Admin Role](./images/image01.png)
 ![User Role](./images/image02.png)
@@ -140,10 +140,10 @@ Please don't forget to create the respective group mapping for the user groups c
 
 To test the OAuth authorization grant using PKCE and the exchange of an SAP IAS to an SAP XSUAA token, please follow the steps of the following tutorial ([click here](https://github.com/SAP-samples/appgyver-auth-flows/#sap-ias--sap-xsuaa-token-exchange)). The provided [**authTest.http**](../../covidApp/http/authTest.http) file also provides a request to test your CAP application using the SAP IAS access token.
 
->**Hint** - Save the file as a new **authTest.private.http** after settings your variable values to make sure your're not committing any secrets or confidential information to Git. 
+>**Hint** - Save the file as a new **authTest.private.http** after settings your variable values to make sure you are not committing any secrets or confidential information to Git. 
 
 ---
 
 ## Summary
 
-Congratulations, you've successfully configured the security related services for this scenario. To ensure an enterprise-ready authentication approach, the usage of SAP Identity Authentication is required in this case. As SAP XSUAA is required by CAP and a native SAP IAS integration is not available yet, the XSUAA cross-consumption feature allows us to use the SAP IAS tokens for such scenarios. 
+Congratulations, you've successfully configured the security related services for this scenario. To ensure an enterprise-ready authentication approach, the usage of SAP Identity Authentication Service is required in this case. As SAP XSUAA is required by CAP and a native SAP IAS integration is not available yet, the XSUAA cross-consumption feature allows us to use the SAP IAS tokens for such scenarios. 

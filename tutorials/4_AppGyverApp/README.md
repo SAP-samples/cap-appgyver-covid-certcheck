@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Learn how to configure a new AppGyver app that allows you to upload screenshots or scans of Covid vacination certificates to your CAP OData service. After successfull validation of the certificate, the app will display the validity date and status retreived by your service. 
+Learn how to configure a new AppGyver app that allows you to upload screenshots or scans of Covid vaccination certificates to your CAP OData service. After successful validation of the certificate, the app will display the validity date and status retrieved by your service. 
 
 ---
 
@@ -71,7 +71,7 @@ Learn how to configure a new AppGyver app that allows you to upload screenshots 
 
 ## Apply the SAP Fiori theme
 
-Apply the SAP Fiori theme to your your project in the **Theme** tab of SAP AppGyver. Details can be found in the screenshot. 
+Apply the SAP Fiori theme to your project in the **Theme** tab of SAP AppGyver. Details can be found in the screenshot. 
 ![AppGyver](./images/image16.png)
 
 ---
@@ -80,7 +80,7 @@ Apply the SAP Fiori theme to your your project in the **Theme** tab of SAP AppGy
 
 Your SAP AppGyver app will need a variety of variables to store information like access tokens or business data. 
 
-1. To add these variables, first open the **Office Access - Covid Check** page and change the toggle in the top right from **View** to **Variables**. Start adding the reuqired **App Variables** as you can see in the screenshots. 
+1. To add these variables, first open the **Office Access - Covid Check** page and change the toggle in the top right from **View** to **Variables**. Start adding the required **App Variables** as you can see in the screenshots. 
     ![AppGyver](./images/image17.png)
     ![AppGyver](./images/image18.png)
     ![AppGyver](./images/image19.png)
@@ -670,7 +670,7 @@ Your SAP AppGyver app will need a variety of variables to store information like
 
 ## Launch your app
 
-You can launch your app initially from the **Launch** tab. Therefore we recommend to use the SAP AppGyver app which is available in the Google or Apple app stores. Just scan the QR code and the app will start on your device. 
+You can launch your app initially from the **Launch** tab. Therefore we recommend using the SAP AppGyver app which is available in the Google Play or Apple AppStore. Just scan the QR code and the app will start on your device. 
 
 ![AppGyver](./images/image13.png)
 
