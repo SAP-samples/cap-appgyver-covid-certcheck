@@ -16,5 +16,8 @@ Learn how to subscribe to SAP Graph and create conenction to SuccessFactors usin
     
     ![SAP BTP - Graph](./images/btp-graph.png)
     
-3. 
+2. Establish Trust between BTP subaccount and Successfactors
+3. Create destination for Successfactors
+4. Configure SAP graph to access Successfactors destination
+
 
