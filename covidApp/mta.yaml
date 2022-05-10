@@ -1,5 +1,5 @@
 _schema-version: "3.1"
-ID: covidApp
+ID: covidApp3
 description: A simple AppGyver App.
 version: 1.0.0
 modules:
@@ -10,6 +10,7 @@ modules:
       - name: covidApp-db
       - name: covidApp-uaa
       - name: covidApp-dest-srv
+      - name: dynatrace-service
     provides:
       - name: srv-api
         properties:
@@ -19,40 +20,6 @@ modules:
       buildpack: nodejs_buildpack
     build-parameters:
       builder: npm-ci
-
-  - name: covidApp-db-deployer
-    type: hdb
-    path: gen/db
-    requires:
-      - name: covidApp-db
-    parameters:
-      buildpack: nodejs_buildpack
-
-  - name: covidApp-app-content
-    type: com.sap.application.content
-    path: .
-    requires:
-      - name: covidApp-repo-host
-        parameters:
-          content-target: true
-    build-parameters:
-      build-result: resources
-      requires:
-        - artifacts:
-            - covidcheckcovidcheckui.zip
-          name: covidcheckcovidcheckui
-          target-path: resources/
-
-  - name: covidcheckcovidcheckui
-    type: html5
-    path: app/covidcheck-ui
-    build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build:cf
-      supported-platforms: []
 
   - name: covidApp-destination-content
     type: com.sap.application.content
@@ -109,6 +76,8 @@ resources:
     parameters:
       service: html5-apps-repo
       service-plan: app-host
+  - name: dynatrace-service
+    type: org.cloudfoundry.existing-service
 
   - name: covidApp-dest-srv
     type: org.cloudfoundry.managed-service

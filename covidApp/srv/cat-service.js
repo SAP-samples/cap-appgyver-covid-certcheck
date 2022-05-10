@@ -6,6 +6,7 @@ const CertificateVerificationException = require('./lib/CertificateVerificationE
 const { useOrFetchDestination } = require("@sap-cloud-sdk/connectivity");
 const { executeHttpRequest } = require("@sap-cloud-sdk/http-client");
 const httpStatus = require('http-status-codes');
+const sharp = require("sharp");
 
 module.exports = cds.service.impl(async function () {
 
@@ -19,10 +20,21 @@ module.exports = cds.service.impl(async function () {
   this.on("decodeQrCode", async req => {
     let qrcodeDecodeValue;
 
-    let result = await new Promise((resolve, reject) => {
-      let imageBuffer = Buffer.from(req.data.base64String.split(',')[1], 'base64');
+    let imageBuffer = Buffer.from(
+      req.data.base64String.split(",")[1],
+      "base64"
+    );
+    const metadata = await sharp(imageBuffer)
+      .resize({
+        width: 562,
+        height: 1216,
+      })
+      .toBuffer();
 
-      Jimp.read(imageBuffer, async (err, image) => {
+    let result = await new Promise((resolve, reject) => {
+    
+
+      Jimp.read(metadata, async (err, image) => {
         if (err) console.error(err)
         var qr = new QrCode();
         qr.callback = async (err, value) => {
