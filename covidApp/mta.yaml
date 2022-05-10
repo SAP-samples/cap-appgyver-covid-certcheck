@@ -1,5 +1,5 @@
 _schema-version: "3.1"
-ID: covidApp3
+ID: covidApp
 description: A simple AppGyver App.
 version: 1.0.0
 modules:
@@ -10,7 +10,6 @@ modules:
       - name: covidApp-db
       - name: covidApp-uaa
       - name: covidApp-dest-srv
-      - name: dynatrace-service
     provides:
       - name: srv-api
         properties:
@@ -76,8 +75,6 @@ resources:
     parameters:
       service: html5-apps-repo
       service-plan: app-host
-  - name: dynatrace-service
-    type: org.cloudfoundry.existing-service
 
   - name: covidApp-dest-srv
     type: org.cloudfoundry.managed-service
@@ -108,5 +105,6 @@ build-parameters:
     - builder: custom
       commands:
         - npm ci
+        - npm dedupe
         - npx -p @sap/cds-dk cds build --production
         - cp .cdsrc.json ./gen/srv

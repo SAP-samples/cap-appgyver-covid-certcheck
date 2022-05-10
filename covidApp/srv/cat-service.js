@@ -8,9 +8,12 @@ const { executeHttpRequest } = require("@sap-cloud-sdk/http-client");
 const httpStatus = require('http-status-codes');
 const sharp = require("sharp");
 
+const { setLogLevel } = require('@sap-cloud-sdk/util')
+
 module.exports = cds.service.impl(async function () {
 
   cds.once('served', async () => {
+    setDefaultCloudSdkLoggersLevel('error')
     if (!global.verifier) {
       global.verifier = new CovidCertificateVerifier()
       await global.verifier.init()
@@ -24,17 +27,17 @@ module.exports = cds.service.impl(async function () {
       req.data.base64String.split(",")[1],
       "base64"
     );
-    const metadata = await sharp(imageBuffer)
-      .resize({
-        width: 562,
-        height: 1216,
-      })
-      .toBuffer();
+
+    const scaleByHalf = await sharp(imageBuffer)
+      .metadata()
+      .then(({ width }) => sharp(imageBuffer)
+        .resize(Math.round(width * 0.5))
+        .toBuffer()
+      );
 
     let result = await new Promise((resolve, reject) => {
-    
 
-      Jimp.read(metadata, async (err, image) => {
+      Jimp.read(scaleByHalf, async (err, image) => {
         if (err) console.error(err)
         var qr = new QrCode();
         qr.callback = async (err, value) => {
@@ -230,6 +233,24 @@ async function processCertificateString(req, certificateString, checkForCountry)
     return
   }
   return JSON.stringify(returnValue)
+}
+
+function setDefaultCloudSdkLoggersLevel(level) {
+  setLogLevel(level, "authorization-header");
+  setLogLevel(level, "batch-response-transformer");
+  setLogLevel(level, "destination-accessor-service");
+  setLogLevel(level, "destination-accessor-vcap");
+  setLogLevel(level, "env-destination-accessor");
+  setLogLevel(level, "environment-accessor");
+  setLogLevel(level, "http-client");
+  setLogLevel(level, "proxy-util");
+  setLogLevel(level, "response-data-accessor");
+  setLogLevel(level, "xsuaa-service");
+  setLogLevel(level, "jwt");
+  setLogLevel(level, "register-destination");
+  setLogLevel(level, "destination-selection-strategies");
+  setLogLevel(level, "csrf-token-header");
+  setLogLevel(level, "jwt");
 }
 
 
