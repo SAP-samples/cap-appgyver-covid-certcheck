@@ -63,6 +63,9 @@ In this part of the tutorial you will learn how to setup the security related as
 (Max)
 
 ### [Step 3: Graph application](./tutorials/3_GraphApplication/README.md)
+
+In this part of the tutorial you will learn how to setup and configure app that queries SuccessFactors using SAP BTP Graph service. This includes subscripbing to SAP BTP Graph Service and creating a destination for SuccessFactors and configuring Graph Service to query SucessFactors.
+
 (Praveen)
 
 ### [Step 4: AppGyver app](./tutorials/4_AppGyverApp/README.md)
