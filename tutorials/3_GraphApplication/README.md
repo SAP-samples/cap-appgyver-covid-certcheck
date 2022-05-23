@@ -76,3 +76,15 @@ Learn how to subscribe to SAP Graph and create conenction to SuccessFactors usin
     ![SAP BTP - Graph](./images/btp-destination-sf.png)
 
 4. Configure SAP graph to access SuccessFactors destination
+
+# Deployment
+SAP graph application is built as an MTA application.
+1. Clone the github repo
+    https://github.tools.sap/btp-use-case-factory/covidcheck/
+2. Open it in your IDE like VS code
+3. Navigate to sapgraph folder in the Terminal
+4. Execute the command "mbt build -p=cf" to build the app
+5. To deploy "cf deploy ./mta_archives/sapgraph_1.0.0.mtar"
+
+
+
