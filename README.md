@@ -62,9 +62,9 @@ In this part of the tutorial you will learn how to setup the security related as
 ### [Step 2: Backend application](./tutorials/2_BackendApplication/README.md)
 (Max)
 
-### [Step 3: Graph application](./tutorials/3_GraphApplication/README.md)
+### [Step 3: Graph application](./tutorials/3_EmployeeLookupService/README.md)
 
-In this part of the tutorial you will learn how to setup and configure app that queries SuccessFactors using SAP BTP Graph service. This includes subscripbing to SAP BTP Graph Service and creating a destination for SuccessFactors and configuring Graph Service to query SucessFactors.
+In this part of the tutorial you will learn how to setup and configure app that queries SuccessFactors using SAP BTP Graph service. This includes subscripbing to SAP BTP Graph Service and creating a destination for SuccessFactors and configuring SAP Graph to query SucessFactors.
 
 (Praveen)
 
