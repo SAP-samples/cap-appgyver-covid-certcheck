@@ -9,10 +9,10 @@
         "db": {
             "kind": "hana"
         },
-        "GraphService": {
+        "EmployeeLookupService": {
             "kind": "rest",
             "credentials": {
-                "destination": "Graph2",
+                "destination": "EmployeeLookup",
                 "path": "/graph",
                 "forwardAuthToken": true
             },

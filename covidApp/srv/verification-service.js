@@ -120,18 +120,18 @@ async function persistValidationResult(req, result, endDate, validForCountry) {
 }
 
 async function getSFSFDetails(firstName, lastName, req) {
-  const graphMicroService = await cds.connect.to('GraphService')
+  const employeeLookupService = await cds.connect.to('EmployeeLookupService')
   firstName = encodeURI(firstName)
   lastName = encodeURI(lastName)
   const jwt = req.req.authInfo.getTokenInfo().getTokenValue()
 
   const destination = await useOrFetchDestination({
-    destinationName: graphMicroService.destination,
+    destinationName: employeeLookupService.destination,
     jwt,
   });
 
   let result = await executeHttpRequest(
-    { destinationName: graphMicroService.destination, jwt },
+    { destinationName: employeeLookupService.destination, jwt },
     {
       headers: {
         accept: '*/*',
