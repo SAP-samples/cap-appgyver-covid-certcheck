@@ -1,0 +1,72 @@
+@iasHostname = https://<<SAP IAS instance e.g. sapdemo>>.accounts.ondemand.com
+@xsuaaHostname = https://<<SAP BTP subaccount subdomain>>.authentication.<<SAP BTP subaccount region>>.hana.ondemand.com
+@iasTokenEndpoint = /oauth2/token
+@capiasClientId = <SAP IAS client ID of public client e.g. ab0141d4-a1b2-123a-789b-06qert361234>
+@codeChallenge = <Code Challenge e.g., E8sZGg-49to1h5rPk5w6l0xKoMz5fhCTp_4Jm-tk3DA>
+@codeVerifier = <Code Verifier e.g., L6Fglaw13U76NKjVmKV5JcnSiD6fhOzOvIzRQKnQOFM>
+@btpXsuaaClient = <<SAP XSUAA service instance client ID e.g. sb-covidApp%21t127663>>
+@btpXsuaaSecret = <<SAP XSUAA service instance client secret e.g. 123EKaw7ixasdfghj%2Bbertz%3D>>
+
+// Either test with deployed or local CAP application
+// @capEndpoint = https://<<your app route prefix e.g. sapdemo-dev>>-covidapp-srv.cfapps.<your SAP BTP subaccount region>.hana.ondemand.com
+@capEndpoint = http://localhost:4004
+
+@certFirstName = <<FirstName of the user from covid certificate e.g. James>>
+
+@certLastName = <<LasttName of the user from covid certificate e.g. Trott>>
+
+
+##########################################
+# 1 - Get SAP IAS authorization code using the PKCE flow
+# -> Can only be executed in browser
+# -> Replace placeholders with respective values first
+##########################################
+
+# @name getAuthorizationCode
+https://<<@iasHostname>>.accounts.ondemand.com/oauth2/authorize?client_id=<<@capiasClientId>>&scope=openid&code_challenge=<<@codeChallenge>>&code_challenge_method=S256&redirect_uri=http://localhost/&response_type=code&state=state
+
+##########################################
+# 2 - Get SAP IAS token using authorization code
+##########################################
+
+# @name getIasToken
+POST {{iasHostname}}{{iasTokenEndpoint}} HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+client_id={{capiasClientId}}
+&code=<<Authorization code from first call>>
+&redirect_uri=http://localhost/
+&grant_type=authorization_code
+&code_verifier={{codeVerifier}}
+
+##########################################
+# 3 - Exchange SAP IAS token to SAP XSUAA token
+##########################################
+
+@id_token = {{getIasToken.response.body.$.id_token}}
+
+# @name doXsuaaTokenExchange
+
+POST {{xsuaaHostname}}/oauth/token
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+client_id={{btpXsuaaClient}}
+&client_secret={{btpXsuaaSecret}}
+&grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer
+&response_type=token+id_token
+&assertion={{id_token}}
+
+##########################################
+# 4 - Test your Employee Lookup service using the SAP IAS token
+##########################################
+
+
+@access_token = {{doXsuaaTokenExchange.response.body.$.access_token}}
+
+# @name getEmployeeData
+
+GET https://emp-lookup-service-dev.cfapps.eu10.hana.ondemand.com/graph/getEmployeeData?firstName={{certFirstName}}&lastName={{certLastName}}
+Authorization: Bearer {{access_token}}
+Accept: application/json
+Content-Type: application/json

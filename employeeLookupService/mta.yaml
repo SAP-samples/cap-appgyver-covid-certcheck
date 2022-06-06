@@ -1,13 +1,13 @@
 _schema-version: "3.1"
-ID: sapgraph2
+ID: employeeLookupService
 description: A simple AppGyver App.
 version: 1.0.0
 modules:
-- name: covidApp-sapgraph2
+- name: emp-lookup-service
   type: nodejs
   path: .
   parameters:
-    host: covidapp-sapgraph2-${space}
+    host: emp-lookup-service-${space}
     memory: 256MB
     enable-ssh: true
   requires: 

@@ -1,9 +1,10 @@
 # manifest.yml for manual deployment
 ---
 applications:
-- name: covidapp-sapgraph
+- name: emp-lookup-service
   path: .
   memory: 256M
   buildpack: nodejs_buildpack
   services:
-  - covidApp-graph
+  - name: covidApp-graph
+  - name: covidApp-uaa
