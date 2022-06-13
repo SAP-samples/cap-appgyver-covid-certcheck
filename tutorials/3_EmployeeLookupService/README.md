@@ -28,6 +28,25 @@ Learn how to subscribe to SAP Graph and create conenction to SuccessFactors usin
 3. Create a service instance of SAP Graph.
 
     ![SAP BTP - Graph](./images/btp-graph.png)
+4. Click the three dots to the right of the created instance and click on "Create Service Key"
+    ![SAP BTP - Graph](./images/graph-servicekey.png)
+5. Enter any name for the service key and click on "Create".
+6. Download and save the created credentials as a text file.
+    ![SAP BTP - Graph](./images/graph-sk-download.png)
+
+## Become a key user
+
+1. Login to SAP BTP cockpit and navigate to your subaccount in the Cloud Foundry environment.
+2. Select Security / Role Collections  from the left-side menu, and then click on the + symbol (New Role Collection).
+3. Enter "SAP Graph key user" as name and Create.
+4. Select the role collection you just created and click Edit.
+5. Click inside the Role Name box and then select sap-graph in the Application Identifier
+6. Check the SAP_Graph_Key_User role. Click Add.
+    ![SAP BTP - Graph](./images/graph-key-user.png)
+7. Don’t forget to Save your changes.
+8. Go back to the subaccount view, select Security / Users  from the left-side menu, select your username, then click on Assign Role Collection on the right-hand pane, check the SAP Graph key user role collection and confirm by clicking Assign Role Collection.
+
+Done! You have specified the landscape to be used for SAP Graph and promoted yourself as SAP Graph key user.
 
 ## Establish Trust between BTP subaccount Destination Service and SuccessFactors tenant
 
@@ -45,7 +64,7 @@ Learn how to subscribe to SAP Graph and create conenction to SuccessFactors usin
 7. In the field <X.509 Certificate>, paste the certificate that you downloaded in step 3 above.
     ![SAP BTP - Graph](./images/sf-oauth-client-app.png)
 
-# Create destination for SuccessFactors
+## Create destination for SuccessFactors
 
 1. Navigate to your SAP BTP subaccount.
 2. From the left-side menu, choose Connectivity -> Destinations and click on "New Destination" button.
@@ -63,22 +82,39 @@ Learn how to subscribe to SAP Graph and create conenction to SuccessFactors usin
 3. Enter four additional properties:
 
     apiKey: the API Key of the OAuth client you created in SuccessFactors.
-
     authnContextClassRef: urn:oasis:names:tc:SAML:2.0:ac:classes:PreviousSession
-
     nameIdFormat: urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
-
-    if the user ID will be propagated to a SuccessFactors application, or
-    urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress, if the user e-mail will be propagated to SuccessFactors.
-
+                  if the user e-mail will be propagated to SuccessFactors
+                  (or)
+                  urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified 
+                  if the user ID will be propagated to a SuccessFactors application
     userIdSource: email
 
     ![SAP BTP - Graph](./images/btp-destination-sf.png)
 
-4. Configure SAP graph to access SuccessFactors destination
+## Construct an SAP Graph - Business Data Graph
+
+1. Install the SAP Graph configuration tool (graphctl)
+Open a console (here we will use Windows and have created the subdirectory C:\demo, but this also works on other operating systems) 
+and enter:
+        "npm i -g @sap/graph-toolkit"
+2. To check that the installation was successful, enter "graphctl -v"
+    ![SAP BTP - Graph](./images/graphctl-install.png)
+3. Log into the SAP Graph configuration tool by providing the credentials text file that you generated previously in (Step 6 of Creating SAP Graph Service Instance) as a parameter to the login command. 
+    graphctl login -f <credentials file> 
+4. A browser tab or window will open and require you to log in. Upon successful authentication you will see: 
+    ![SAP BTP - Graph](./images/graphctl-logged-on.png)
+5. Generate the SAP Graph configuration file by entering the below command in your console window.
+        graphctl generate config -f <config.json>
+    ![SAP BTP - Graph](./images/graphctl-waiting-for-config.png)
+6. Activate the configuration of the business data graph by entering the below command in your console window.
+    graphctl activate config -f <config.json> 
+    ![SAP BTP - Graph](./images/graphctl-activate.png)
+    Once it is activated, you will see the message "Successfully activated business data graph"
 
 # Deployment
 EmployeeLookupService application is built as an MTA application.
+
 1. Clone the github repo
     https://github.tools.sap/btp-use-case-factory/covidcheck/
 2. Open it in your IDE like SAP Business Application Studio or MS Visual Studio code
