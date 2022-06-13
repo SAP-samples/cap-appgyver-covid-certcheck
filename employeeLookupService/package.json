@@ -1,7 +1,7 @@
 {
-  "name": "covidapp-sapgraph",
+  "name": "covidapp-emplookup-service",
   "version": "1.0.0",
-  "description": "Query SuccessFactors using SAP Graph",
+  "description": "Query Employee Data from SuccessFactors using SAP Graph",
   "scripts": {
     "start": "npx --node-options=--inspect node lib/index.js",
     "lint": "eslint lib/**/*.js",
