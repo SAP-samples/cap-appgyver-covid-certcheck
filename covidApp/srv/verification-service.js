@@ -1,6 +1,6 @@
 
 const jsqr = require("jsqr")
-const jpeg = require('jpeg-js');
+const inkjet = require("inkjet")
 const cds = require("@sap/cds");
 const CovidCertificateVerifier = require('./lib/CovidCertificateVerifier.js')
 const CertificateVerificationException = require('./lib/CertificateVerificationException.js')
@@ -34,12 +34,13 @@ module.exports = cds.service.impl(async function () {
 
     try {
       if (image.substring(0, 1) == JPEG) {
-        let rawImageData = jpeg.decode(imageBuffer);
-        let clampedArray = new Uint8ClampedArray(rawImageData.data);
-        let metadata = await sharp(imageBuffer).metadata()
-        certificateString = jsqr(clampedArray, metadata.width, metadata.height).data;
+        inkjet.decode(imageBuffer, (err, decoded) => {
+          let clampedArray = new Uint8ClampedArray(decoded.data);
+          certificateString = jsqr(clampedArray, decoded.width, decoded.height).data;
+          // decoded: { width: number, height: number, data: Uint8Array }
+        });
       } else if (image.substring(0, 1) == PNG) {
-        //jsqr doesn't work for JPEG (always calculates width * height * 4 channel - doesn't work for jpeg and throws "malformed content...")
+        //sharp + jsqr doesn't work for JPEG (always calculates width * height * 4 channel - doesn't work for jpeg and throws "malformed content...")
         ({ data, info } = await sharp(imageBuffer).raw().toBuffer({ resolveWithObject: true }));
         certificateString = jsqr(Uint8ClampedArray.from(data), info.width, info.height).data;
       } else {
@@ -170,6 +171,9 @@ async function checkValidityEnd(payload, country) {
 
   let countDays = 0
 
+  //first check for today - throws exception if not valid today
+  let result = await global.verifier.checkRules(payload, country, checkDate, false)
+
   do {
     checkDate = addDays(checkDate, 1)
     countDays++
@@ -194,7 +198,7 @@ is valid indefinitely. This avoids that the actual method continues to check day
 whether the certificate is valid. 
 **/
 function isValidInfinite(countDays) {
-  return (countDays > 700) ? true : false
+  return (countDays > 400) ? true : false
 }
 
 function addDays(date, days) {
