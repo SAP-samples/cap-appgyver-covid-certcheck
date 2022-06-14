@@ -1,7 +1,7 @@
 _schema-version: "3.1"
 ID: covidApp
-description: A simple AppGyver App.
-version: 1.0.0
+description: A simple AppGyver App to check CovidCertificates
+version: 1.0.9
 modules:
   - name: covidApp-srv
     type: nodejs
@@ -17,6 +17,7 @@ modules:
     parameters:
       enable-ssh: true
       buildpack: nodejs_buildpack
+      memory: 2G
     build-parameters:
       builder: npm-ci
 
