@@ -17,8 +17,10 @@ Learn how to subscribe to SAP Graph and create conenction to SuccessFactors usin
 # Prerequisites
 
 1. SAP BTP Subaccount
-    (i) sap-graph subscription
-    (ii) Authorization & Trust Management Service
+   * sap-graph subscription
+   * Authorization & Trust Management Service
+   * SAP Business Application Studio 
+
 2. SAP SuccessFactors
 
 ## Creating SAP Graph Service Instance
@@ -31,7 +33,7 @@ Learn how to subscribe to SAP Graph and create conenction to SuccessFactors usin
 4. Click the three dots to the right of the created instance and click on "Create Service Key"
     ![SAP BTP - Graph](./images/graph-servicekey.png)
 5. Enter any name for the service key and click on "Create".
-6. Download and save the created credentials as a text file.
+6. <a name="servicekey" />Download and save the created credentials as a text file.
     ![SAP BTP - Graph](./images/graph-sk-download.png)
 
 ## Become a key user
@@ -92,35 +94,109 @@ Done! You have specified the landscape to be used for SAP Graph and promoted you
 
     ![SAP BTP - Graph](./images/btp-destination-sf.png)
 
+## Get ready for SAP Business Application Studio 
+
+1.	Make sure you have opened your *SAP BTP Account* and navigate to your *subaccount*.
+   
+2.	Go to *Services* and select *Instances and Subscriptions*.
+   
+3.	Select **SAP Business Application Studio** located in the *Subscriptions* tab and click on the icon to open the application.
+   ![Open SAP Business Application Studio](./images/subscribe-bas.png)
+
+4. Create a **Dev Space** once the SAP Business Application Studio home appears.
+   ![Create Dev Space](./images/create-devspace.png)
+
+5.	Enter a **Dev Space name** e.g 'CovidApp', select the type *Full Stack Cloud Application*.
+   Don´t forget to click on the button *Create Dev Space*.
+   ![Configure Dev Space](./images/devspace-config.png)
+    
+6.	Your Dev Space is now being created. As soon as the Dev Space is running you can click on your Dev Space name to  access it.
+
 ## Construct an SAP Graph - Business Data Graph
 
-1. Install the SAP Graph configuration tool (graphctl)
-Open a console (here we will use Windows and have created the subdirectory C:\demo, but this also works on other operating systems) 
-and enter:
-        "npm i -g @sap/graph-toolkit"
-2. To check that the installation was successful, enter "graphctl -v"
-    ![SAP BTP - Graph](./images/graphctl-install.png)
-3. Log into the SAP Graph configuration tool by providing the credentials text file that you generated previously in (Step 6 of Creating SAP Graph Service Instance) as a parameter to the login command. 
+1. Open a new Terminal in the SAP Business Application Studio.
+   ![Open new Terminal](./images/open_newterminal.png)
+
+2. Execute the following command to install the SAP Graph configuration tool (graphctl). 
+   ```bash
+    npm i -g @sap/graph-toolkit
+   ```
+        
+3. To check that the installation was successful, execute the following command:
+   ```bash
+    graphctl -v
+   ```
+    ![SAP BTP - Graph](./images/graphctl-installation.png)
+
+4. Upload the service key file, that you have created during the service instance creation of the SAP Graph service, to the **temp** directory of your SAP Business Application Studio Dev Space. ([Step 6 of Creating SAP Graph Service Instance](#servicekey)) First, open a new folder in your workspace: 
+    
+    ![open folder in BAS](./images/open-folder.png)
+
+    Selec the **tmp** directory. 
+
+    ![select tmp directoryS](./images/tmp-dir.png)
+
+    Right-Click into the lower section to open the context-menu. Select **Upload File** and select the file that you have downloaded earlier. 
+
+    ![upload files](./images/upload-files.png)    
+
+    The file that you have selected should now appear in the file list that you have previously right-clicked in. 
+    
+
+    > **IMPORTANT:** Do not commit this file to your GitHub repository and directly add it to your .gitignore file. Otherwise others can get access to the service credentials. 
+
+
+5. Log into the SAP Graph configuration tool by providing the credentials text file that you upload previously as a parameter to the login command. 
+
+    ```bash
     graphctl login -f <credentials file> 
-4. A browser tab or window will open and require you to log in. Upon successful authentication you will see: 
-    ![SAP BTP - Graph](./images/graphctl-logged-on.png)
-5. Generate the SAP Graph configuration file by entering the below command in your console window.
-        graphctl generate config -f <config.json>
-    ![SAP BTP - Graph](./images/graphctl-waiting-for-config.png)
-6. Activate the configuration of the business data graph by entering the below command in your console window.
+    ````
+
+6. A browser tab or window will open and require you to log in. Upon successful authentication you will see: 
+    ![SAP Graph login](./images/graphctl-logged-on.png)
+
+7. Generate the SAP Graph configuration file by executing the below command:
+   ```bash
+    graphctl generate config -f <config.json>
+    ```
+    ![SAP Graph - generate config file](./images/graphctl-waiting-for-config.png)
+
+8. Activate the configuration of the business data graph by executing the following command:
+    ```bash
     graphctl activate config -f <config.json> 
-    ![SAP BTP - Graph](./images/graphctl-activate.png)
-    Once it is activated, you will see the message "Successfully activated business data graph"
+    ```
+    ![SAP Graph - activate config](./images/graphctl-activate.png)
+
+    Once it is activated, you will see the message **Successfully activated business data graph**:
 
 # Deployment
-EmployeeLookupService application is built as an MTA application.
 
-1. Clone the github repo
-    https://github.tools.sap/btp-use-case-factory/covidcheck/
-2. Open it in your IDE like SAP Business Application Studio or MS Visual Studio code
-3. Navigate to "employeeLookupService" folder in the Terminal
-4. Execute the command "mbt build -p=cf" to build the app
-5. To deploy "cf deploy ./mta_archives/employeeLookupService_1.0.0.mtar"
+Now it's time to deploy the actual microservice that leverages the SAP Graph service and its API. The microservice itself is just a plain Node.js application calling the HTTP endpoint of the SAP Graph service. The deployment happens as an Multi-Target Application (MTA). 
+
+1. Go to **Open Workspace** and select **projects**.
+   ![Open Workspace in BAS](./images/open-workspace.png)
+
+2. Clone the whole repository to get all the source code in order to build & deploy this and other artefacts: 
+    ```bash
+    git clone https://github.tools.sap/btp-use-case-factory/covidcheck/
+    ```
+
+3. Navigate to "employeeLookupService" directory in the terminal
+    ```bash
+    cd covidcheck/employeeLookupService/
+    ```
+
+4. Trigger the build of the Multi-Target Application (MTA): 
+    ```bash
+    mbt build
+    ``` 
+
+5. Once the build process is done, you can go on to deploy the application to the SAP BTP, Cloud Foundry Runtime using the *Cloud Foundry CLI*: 
+    ```bash
+    cf deploy ./mta_archives/employeeLookupService_1.0.0.mtar
+    ```
+
+    > You may need to log in using to your Cloud Foundry space using `cf login` before. 
 
 
 
