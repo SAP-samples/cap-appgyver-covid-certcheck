@@ -37,7 +37,6 @@ module.exports = cds.service.impl(async function () {
         inkjet.decode(imageBuffer, (err, decoded) => {
           let clampedArray = new Uint8ClampedArray(decoded.data);
           certificateString = jsqr(clampedArray, decoded.width, decoded.height).data;
-          // decoded: { width: number, height: number, data: Uint8Array }
         });
       } else if (image.substring(0, 1) == PNG) {
         //sharp + jsqr doesn't work for JPEG (always calculates width * height * 4 channel - doesn't work for jpeg and throws "malformed content...")
@@ -96,7 +95,7 @@ async function persistValidationResult(req, result, endDate, validForCountry) {
     if (error.response.status == httpStatus.StatusCodes.FORBIDDEN) throw new CertificateVerificationException("You are not the owner of the certificate.")
   }
 
-  let existingPermission = await tx.run(SELECT.one.from(Permissions).where({ employeeID: empId }))
+  let existingPermission = await tx.run(SELECT.one.from(Permissions).where({ employeeID: empId, validForCountry: validForCountry }))
   try {
     if (!existingPermission) {
       dbResult = await tx.run(INSERT.into(Permissions).entries({
@@ -121,7 +120,7 @@ async function persistValidationResult(req, result, endDate, validForCountry) {
         countryOfCompany: countryOfCompany,
         isContingentWorker: isContingentWorker,
         permissionUntil: endDate,
-      }).where({ employeeID: empId }))
+      }).where({ employeeID: empId, validForCountry: validForCountry }))
       console.log(`updated permission for ${empId} until ${endDate}`)
     }
   } catch (error) {
