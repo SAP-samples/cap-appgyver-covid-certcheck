@@ -1,5 +1,6 @@
-const Jimp = require("jimp");
-const QrCode = require('qrcode-reader');
+
+const jsqr = require("jsqr")
+const inkjet = require("inkjet")
 const cds = require("@sap/cds");
 const CovidCertificateVerifier = require('./lib/CovidCertificateVerifier.js')
 const CertificateVerificationException = require('./lib/CertificateVerificationException.js')
@@ -7,8 +8,11 @@ const { useOrFetchDestination } = require("@sap-cloud-sdk/connectivity");
 const { executeHttpRequest } = require("@sap-cloud-sdk/http-client");
 const httpStatus = require('http-status-codes');
 const sharp = require("sharp");
-
 const { setLogLevel } = require('@sap-cloud-sdk/util')
+
+const PNG = "i"
+const JPEG = "/"
+
 
 module.exports = cds.service.impl(async function () {
 
@@ -21,33 +25,45 @@ module.exports = cds.service.impl(async function () {
   })
 
   this.on("decodeQrCode", async req => {
-    let qrcodeDecodeValue;
-
+    let result, data, info, certificateString
+    let image = req.data.base64String.split(",")[1]
     let imageBuffer = Buffer.from(
-      req.data.base64String.split(",")[1],
+      image,
       "base64"
     );
 
-    const scaleByHalf = await sharp(imageBuffer)
-      .metadata()
-      .then(({ width }) => sharp(imageBuffer)
-        .resize(Math.round(width * 0.5))
-        .toBuffer()
-      );
+    try {
+      if (image.substring(0, 1) == JPEG) {
+        inkjet.decode(imageBuffer, (err, decoded) => {
+          let clampedArray = new Uint8ClampedArray(decoded.data);
+          certificateString = jsqr(clampedArray, decoded.width, decoded.height).data;
+        });
+      } else if (image.substring(0, 1) == PNG) {
+        //sharp + jsqr doesn't work for JPEG (always calculates width * height * 4 channel - doesn't work for jpeg and throws "malformed content...")
+        ({ data, info } = await sharp(imageBuffer).raw().toBuffer({ resolveWithObject: true }));
+        certificateString = jsqr(Uint8ClampedArray.from(data), info.width, info.height).data;
+      } else {
+        req.error({
+          code: 'TECHNICALERROR',
+          message: 'unsupported filetype. Only JPEG / PNG allowed.',
+          target: 'certificateString',
+          status: 419
+        })
+        return
+      }
 
-    let result = await new Promise((resolve, reject) => {
-
-      Jimp.read(scaleByHalf, async (err, image) => {
-        if (err) console.error(err)
-        var qr = new QrCode();
-        qr.callback = async (err, value) => {
-          if (err) console.error(err)
-          qrcodeDecodeValue = value.result;
-          resolve(await processCertificateString(req, qrcodeDecodeValue, req.data.country))
-        };
-        qr.decode(image.bitmap);
-      });
-    });
+      console.log("result is: " + certificateString)
+      result = await processCertificateString(req, certificateString, req.data.country)
+    } catch (error) {
+      console.error(error)
+      req.error({
+        code: 'TECHNICALERROR',
+        message: 'QRCode cannot be parsed.',
+        target: 'certificateString',
+        status: 419
+      })
+      return
+    }
 
     return result
   })
@@ -79,7 +95,7 @@ async function persistValidationResult(req, result, endDate, validForCountry) {
     if (error.response.status == httpStatus.StatusCodes.FORBIDDEN) throw new CertificateVerificationException("You are not the owner of the certificate.")
   }
 
-  let existingPermission = await tx.run(SELECT.one.from(Permissions).where({ employeeID: empId }))
+  let existingPermission = await tx.run(SELECT.one.from(Permissions).where({ employeeID: empId, validForCountry: validForCountry }))
   try {
     if (!existingPermission) {
       dbResult = await tx.run(INSERT.into(Permissions).entries({
@@ -104,7 +120,7 @@ async function persistValidationResult(req, result, endDate, validForCountry) {
         countryOfCompany: countryOfCompany,
         isContingentWorker: isContingentWorker,
         permissionUntil: endDate,
-      }).where({ employeeID: empId }))
+      }).where({ employeeID: empId, validForCountry: validForCountry }))
       console.log(`updated permission for ${empId} until ${endDate}`)
     }
   } catch (error) {
@@ -154,6 +170,9 @@ async function checkValidityEnd(payload, country) {
 
   let countDays = 0
 
+  //first check for today - throws exception if not valid today
+  let result = await global.verifier.checkRules(payload, country, checkDate, false)
+
   do {
     checkDate = addDays(checkDate, 1)
     countDays++
@@ -178,7 +197,7 @@ is valid indefinitely. This avoids that the actual method continues to check day
 whether the certificate is valid. 
 **/
 function isValidInfinite(countDays) {
-  return (countDays > 700) ? true : false
+  return (countDays > 400) ? true : false
 }
 
 function addDays(date, days) {

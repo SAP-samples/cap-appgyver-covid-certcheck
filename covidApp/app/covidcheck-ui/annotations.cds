@@ -50,8 +50,17 @@ annotate service.Permissions with @(UI.LineItem : [
         $Type : 'UI.DataField',
         Label : 'Updated at',
         Value : modifiedAt,
-    }
+    },
+
 ]);
+
+annotate service.Permissions with @(UI.PresentationVariant : {
+    GroupBy        : [
+        employeeID,
+        validForCountry
+    ],
+    Visualizations : ['@UI.LineItem']
+});
 
 annotate service.Permissions with @(
     UI.FieldGroup #GeneratedGroup1 : {
