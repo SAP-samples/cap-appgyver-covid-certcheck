@@ -198,5 +198,13 @@ Now it's time to deploy the actual microservice that leverages the SAP Graph ser
 
     > You may need to log in using to your Cloud Foundry space using `cf login` before. 
 
+6. Check the log output of the previous step. Also `cf apps` will give you an indicator whether the app was succesfully deployed or not. `cf logs employeeLookupService --recent` will give you some more insights if starting the app has failed. 
+
+---
+
+Congratulations. You should now have a simple Node.js app deployed in SAP BTP, Cloud Foundry runtime, utilizing the SAP Graph Service and its API. The following step is to deploy an app built with the SAP Cloud Application Programming Model, which will be used to read more employee data.
+
+If you want to learn more about SAP Graph and its usage, take a look at the blog posts in the [SAP Community](https://blogs.sap.com/tags/da20f5de-7c9f-47c9-b766-b98820e5be12/) or the [SAP Developers YouTube channel](https://www.youtube.com/watch?v=0zgsY7QXoyQ&list=PL6RpkC85SLQDYDMdi39uXvNoQ1iYWgZjL). 
+
 
 
