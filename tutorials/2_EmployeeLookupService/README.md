@@ -178,12 +178,12 @@ Now it's time to deploy the actual microservice that leverages the SAP Graph ser
 
 2. Clone the whole repository to get all the source code in order to build & deploy this and other artefacts: 
     ```bash
-    git clone https://github.tools.sap/btp-use-case-factory/covidcheck/
+    git clone https://github.com/sap-samples/cap-appgyver-covid-certcheck.git
     ```
 
 3. Navigate to "employeeLookupService" directory in the terminal
     ```bash
-    cd covidcheck/employeeLookupService/
+    cd cap-appgyver-covid-certcheck/employeeLookupService/
     ```
 
 4. Trigger the build of the Multi-Target Application (MTA): 
