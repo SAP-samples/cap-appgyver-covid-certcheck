@@ -119,22 +119,22 @@ Your SAP AppGyver app will need a variety of variables to store information like
 2. Please add the following components to your logic flow and connect them as depicted, before you start with the individual component configurations. 
     ![AppGyver](./images/image26a.png)
 
-    | #  |     Type     |       Feature         |
-    |----|:------------:|----------------------:|
-    | 1  | Event        | Page mounted          |
-    | 2  | View         | Hide spinner          |
-    | 3  | Storage      | Get item from storage |
-    | 4  | Utility      | If condition          |
-    | 5  | Storage      | Get item from storage |
-    | 6  | Variables    | Set app variable      |
-    | 7  | Data         | HTTP request          |
-    | 8  | Variables    | Set app variable      |
-    | 9  | Storage      | Set item to storage   |
-    | 10 | Storage      | Set item to storage   |
-    | 11 | Navigation   | Dismiss initial view  |
-    | 12 | JS           | Java Script           |
-    | 13 | Variables    | Set page variable     |
-    | 14 | Variables    | Set page variable     |
+    | #   |    Type    |               Feature |
+    | --- | :--------: | --------------------: |
+    | 1   |   Event    |          Page mounted |
+    | 2   |    View    |          Hide spinner |
+    | 3   |  Storage   | Get item from storage |
+    | 4   |  Utility   |          If condition |
+    | 5   |  Storage   | Get item from storage |
+    | 6   | Variables  |      Set app variable |
+    | 7   |    Data    |          HTTP request |
+    | 8   | Variables  |      Set app variable |
+    | 9   |  Storage   |   Set item to storage |
+    | 10  |  Storage   |   Set item to storage |
+    | 11  | Navigation |  Dismiss initial view |
+    | 12  |     JS     |           Java Script |
+    | 13  | Variables  |     Set page variable |
+    | 14  | Variables  |     Set page variable |
 
     >#1 Event - Page mounted <br>
     >[<img src="./images/image27.png" width="100">](./images/image27.png)
@@ -216,20 +216,20 @@ Your SAP AppGyver app will need a variety of variables to store information like
 2. Please select the **Web View** component in your canvas, add the following components to your logic flow and connect them as depicted, before you start with the individual configurations. 
     ![AppGyver](./images/image190.png)
 
-    | #  |     Type     |            Feature            |
-    |----|:------------:|------------------------------:|
-    | 1  | Event        | Component onLocationChange    |
-    | 2  | JS           | JavaScript                    |
-    | 3  | Utility      | If condition                  |
-    | 4  | Variables    | Set app variable              |
-    | 5  | Navigation   | Dismiss initial view          |
-    | 6  | Data         | HTTP request                  |
-    | 7  | Variables    | Set app variable              |
-    | 8  | Variables    | Set app variable              |
-    | 9  | Storage      | Set item to storage           |
-    | 10  | Storage     | Set item to storage           |
-    | 11  | Variables   | Set app variable              |
-    | 12  | Variables   | Set app variable              |
+    | #   |    Type    |                    Feature |
+    | --- | :--------: | -------------------------: |
+    | 1   |   Event    | Component onLocationChange |
+    | 2   |     JS     |                 JavaScript |
+    | 3   |  Utility   |               If condition |
+    | 4   | Variables  |           Set app variable |
+    | 5   | Navigation |       Dismiss initial view |
+    | 6   |    Data    |               HTTP request |
+    | 7   | Variables  |           Set app variable |
+    | 8   | Variables  |           Set app variable |
+    | 9   |  Storage   |        Set item to storage |
+    | 10  |  Storage   |        Set item to storage |
+    | 11  | Variables  |           Set app variable |
+    | 12  | Variables  |           Set app variable |
 
     >#1 Event - Component onLocationChange <br>
     >[<img src="./images/image191.png" width="100">](./images/image191.png)
@@ -306,19 +306,19 @@ Your SAP AppGyver app will need a variety of variables to store information like
 2. Please add the following components to your logic flow and connect them as depicted, before you start with the individual component configurations. 
     ![AppGyver](./images/image63.png)
 
-    | #  |     Type     |       Feature                 |
-    |----|:------------:|------------------------------:|
-    | 1  | Event        | Page mounted                  |
-    | 2  | Storage      | Get item from storage         |
-    | 3  | Variables    | Set app variable              |
-    | 4  | Storage      | Get item from storage         |
-    | 5  | Variables    | Set app variable              |
-    | 6  | Data         | HTTP request                  |
-    | 7  | Variables    | Set page variable             |
-    | 8  | View         | Hide spinner                  |
-    | 9  | Event        | App variable 'auth' changed   |
-    | 10 | Event        | Page focused                  |
-    | 11 | Utility      | If condition                  |
+    | #   |   Type    |                     Feature |
+    | --- | :-------: | --------------------------: |
+    | 1   |   Event   |                Page mounted |
+    | 2   |  Storage  |       Get item from storage |
+    | 3   | Variables |            Set app variable |
+    | 4   |  Storage  |       Get item from storage |
+    | 5   | Variables |            Set app variable |
+    | 6   |   Data    |                HTTP request |
+    | 7   | Variables |           Set page variable |
+    | 8   |   View    |                Hide spinner |
+    | 9   |   Event   | App variable 'auth' changed |
+    | 10  |   Event   |                Page focused |
+    | 11  |  Utility  |                If condition |
 
     >#1 Event - Page mounted <br>
     >[<img src="./images/image64.png" width="100">](./images/image64.png)
@@ -506,18 +506,18 @@ Your SAP AppGyver app will need a variety of variables to store information like
 2. Please select the **Scan certificate** button in your canvas, add the following components to your logic flow and connect them as depicted, before you start with the individual configurations. 
     ![AppGyver](./images/image145.png)
 
-    | #  |     Type     |       Feature         |
-    |----|:------------:|----------------------:|
-    | 1  | Event        | Component tab         |
-    | 2  | Device       | Scan QR/barcode       |
-    | 3  | Variables    | Set app variable      |
-    | 4  | Data         | HTTP request          |
-    | 5  | Variables    | Set app variable      |
-    | 6  | Storage      | Set item to storage   |
-    | 7  | Variables    | Set app variable      |
-    | 8  | Variables    | Set app variable      |
-    | 9  | Variables    | Set app variable      |
-    | 10  | Storage     | Set item to storage   |
+    | #   |   Type    |             Feature |
+    | --- | :-------: | ------------------: |
+    | 1   |   Event   |       Component tab |
+    | 2   |  Device   |     Scan QR/barcode |
+    | 3   | Variables |    Set app variable |
+    | 4   |   Data    |        HTTP request |
+    | 5   | Variables |    Set app variable |
+    | 6   |  Storage  | Set item to storage |
+    | 7   | Variables |    Set app variable |
+    | 8   | Variables |    Set app variable |
+    | 9   | Variables |    Set app variable |
+    | 10  |  Storage  | Set item to storage |
 
     >#1 Event - Component tab <br>
     >[<img src="./images/image146.png" width="100">](./images/image146.png)
@@ -591,19 +591,19 @@ Your SAP AppGyver app will need a variety of variables to store information like
 2. Please select the **Upload certificate** button in your canvas, add the following components to your logic flow and connect them as depicted, before you start with the individual configurations. 
     ![AppGyver](./images/image183.png)
 
-    | #  |     Type     |       Feature           |
-    |----|:------------:|------------------------:|
-    | 1  | Event        | Component tab           |
-    | 2  | Media        | Pick image from library |
-    | 3  | Variables    | Set app variable        |
-    | 4  | Media        | Convert to base64       |
-    | 5  | Data         | HTTP request            |
-    | 6  | Variables    | Set app variable        |
-    | 7  | Storage      | Set item to storage     |
-    | 8  | Variables    | Set app variable        |
-    | 9  | Variables    | Set app variable        |
-    | 10 | Variables    | Set app variable        |
-    | 11 | Storage      | Set item to storage     |
+    | #   |   Type    |                 Feature |
+    | --- | :-------: | ----------------------: |
+    | 1   |   Event   |           Component tab |
+    | 2   |   Media   | Pick image from library |
+    | 3   | Variables |        Set app variable |
+    | 4   |   Media   |       Convert to base64 |
+    | 5   |   Data    |            HTTP request |
+    | 6   | Variables |        Set app variable |
+    | 7   |  Storage  |     Set item to storage |
+    | 8   | Variables |        Set app variable |
+    | 9   | Variables |        Set app variable |
+    | 10  | Variables |        Set app variable |
+    | 11  |  Storage  |     Set item to storage |
 
     >#1 Event - Component tab <br>
     >[<img src="./images/image146.png" width="100">](./images/image146.png)
@@ -683,4 +683,6 @@ Your SAP AppGyver app will need a variety of variables to store information like
 You can launch your app initially from the **Launch** tab. Therefore we recommend using the SAP AppGyver app which is available in the Google Play or Apple AppStore. Just scan the QR code and the app will start on your device. 
 
 ![AppGyver](./images/image13.png)
+
+If you want to get the full picture about the entire solution, please read the corresponding blog post. TODO LINK 
 
