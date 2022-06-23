@@ -206,5 +206,6 @@ Congratulations. You should now have a simple Node.js app deployed in SAP BTP, C
 
 If you want to learn more about SAP Graph and its usage, take a look at the blog posts in the [SAP Community](https://blogs.sap.com/tags/da20f5de-7c9f-47c9-b766-b98820e5be12/) or the [SAP Developers YouTube channel](https://www.youtube.com/watch?v=0zgsY7QXoyQ&list=PL6RpkC85SLQDYDMdi39uXvNoQ1iYWgZjL). 
 
+If you want to get the full picture about the solution overall, please read the corresponding blog post. TODO LINK 
 
 

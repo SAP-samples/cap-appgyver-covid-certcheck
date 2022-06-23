@@ -147,3 +147,5 @@ To test the OAuth authorization grant using PKCE and the exchange of an SAP IAS 
 ## Summary
 
 Congratulations, you've successfully configured the security related services for this scenario. To ensure an enterprise-ready authentication approach, the usage of SAP Identity Authentication Service is required in this case. As SAP XSUAA is required by CAP and a native SAP IAS integration is not available yet, the XSUAA cross-consumption feature allows us to use the SAP IAS tokens for such scenarios. 
+
+If you want to get the full picture about the entire solution, please read the corresponding blog post. TODO LINK 
