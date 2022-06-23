@@ -58,21 +58,18 @@ Subscriptions required in your SAP Business Technology Platform Account:
 
 In this part of the tutorial you will learn how to setup the security related aspects of your scenario. The security setup will allow you secure access to your CAP REST endpoints using the so called PKCE flow. Therefore you will use SAP Identity Authentication Service and integrate it with your CAP service secured by SAP XSUAA. 
 
-(Martin & Jim - Uwe the "Validation Monkey")
-### [Step 2: Backend application](./tutorials/2_BackendApplication/README.md)
-(Max)
+### [Step 2: Graph application](./tutorials/2_EmployeeLookupService/README.md)
 
-### [Step 3: Graph application](./tutorials/3_EmployeeLookupService/README.md)
+In this part of the tutorial you will learn how to setup and configure app that queries SAP SuccessFactors using SAP BTP Graph service. This includes subscribing to the SAP Graph Service and creating a Destination for SAP SuccessFactors and configuring SAP Graph to query SAP SuccessFactors.
 
-In this part of the tutorial you will learn how to setup and configure app that queries SuccessFactors using SAP BTP Graph service. This includes subscripbing to SAP BTP Graph Service and creating a destination for SuccessFactors and configuring SAP Graph to query SucessFactors.
+### [Step 3: Backend application](./tutorials/3_BackendApplication/README.md)
 
-(Praveen)
+In this part of the tutorial you are going to deploy the main backend application built with the SAP Cloud Application Programming Model. This app validates and verifies the uploaded Covid Certificate and communicates with the earlier deployed EmployeeLookupService.
 
 ### [Step 4: AppGyver app](./tutorials/4_AppGyverApp/README.md)
 
 In this part of the tutorial you will learn how to setup and configure your SAP AppGyver app including a secure access to your CAP REST endpoints. The SAP AppGyver app will allow you to upload or scan Covid vaccination or test certificates. The certificate will be checked in the CAP service and the validation result will be displayed and stored in the SAP AppGyver app. 
 
-(Martin & Jim - Uwe the "Validation Monkey")
 ### [Step 5: Test cases](./tutorials/5_TestCases/README.md)
 (Nani)
 
