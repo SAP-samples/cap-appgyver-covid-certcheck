@@ -1,5 +1,7 @@
 # Office Access - Covid Check app for SAP AppGyver
 
+## Description
+
 Description by Jim missing :-)
 
 ![architecture](./tutorials/0_General/images/architecture.png)
@@ -13,26 +15,26 @@ The required systems and components are:
 
 Entitlements/Quota required in your SAP Business Technology Platform Account:
 
-| Service                                       | Plan              | Number of instances |
-| --------------------------------------------- | ----------------- | ------------------- |
-| Cloud Foundry Memory                          |                   | 1GB                 |
-| SAP Cloud Identity Services                   | application       | 1                   |
-| SAP Graph                                     | standard          | 1                   |
-| HTML5 Application Repository Service          | app-host          | 1                   |
-| Destination Service                           | lite              | 2                   |
-| SAP HANA Schemas & HDI Containers             | hdi-shared        | 1                   |
-| SAP HANA Cloud                                | hana              | 1                   |
-| Authorization and Trust Management Service    | application       | 1                   |
+| Service                                    | Plan        | Number of instances |
+| ------------------------------------------ | ----------- | ------------------- |
+| Cloud Foundry Memory                       |             | 1GB                 |
+| SAP Cloud Identity Services                | application | 1                   |
+| SAP Graph                                  | standard    | 1                   |
+| HTML5 Application Repository Service       | app-host    | 1                   |
+| Destination Service                        | lite        | 2                   |
+| SAP HANA Schemas & HDI Containers          | hdi-shared  | 1                   |
+| SAP HANA Cloud                             | hana        | 1                   |
+| Authorization and Trust Management Service | application | 1                   |
 
 
 Subscriptions required in your SAP Business Technology Platform Account:
 
-| Subscription                      | Plan                                                |
-| --------------------------------- | --------------------------------------------------- |
-| SAP AppGyver                      | standard                                            |
-| SAP Business Application Studio   | standard-edition                                    |
-| SAP Cloud Identity Services       | default (only if SAP IAS not available yet)         |
-| Launchpad Service                 | standard                                            |
+| Subscription                    | Plan                                        |
+| ------------------------------- | ------------------------------------------- |
+| SAP AppGyver                    | standard                                    |
+| SAP Business Application Studio | standard-edition                            |
+| SAP Cloud Identity Services     | default (only if SAP IAS not available yet) |
+| Launchpad Service               | standard                                    |
 
 
 ## Setup and Configuration
@@ -68,14 +70,9 @@ In this part of the tutorial you will learn how to setup and configure your SAP 
 None. 
 
 ## How to obtain support
-
 [Create an issue](https://github.com/SAP-samples/covid-checker/issues) in this repository if you find a bug or have questions about the content.
  
 For additional support, [ask a question in SAP Community](https://answers.sap.com/questions/ask.html).
 
 ## Contributing
-
-Do you have ideas how to improve this scenario? Do you want to correct descriptions/artifacts of this repository? Don't hesitate to open a PR and we'll have a look at it. 
-
-## License
-Copyright (c) 2022 SAP SE or an SAP affiliate company. All rights reserved. This project is licensed under the Apache Software License, version 2.0 except as noted otherwise in the [LICENSE](LICENSES/Apache-2.0.txt) file.
+If you wish to contribute code, offer fixes or improvements, please send a pull request. Due to legal reasons, contributors will be asked to accept a DCO when they create the first pull request to this project. This happens in an automated fashion during the submission process. SAP uses [the standard DCO text of the Linux Foundation](https://developercertificate.org/).
