@@ -7,6 +7,7 @@ TEXT JIM :-)
 -->
 
 ## Description
+Text Jim :-)
 <!-- Please include SEO-friendly description -->
 
 ![architecture](./tutorials/0_General/images/architecture.png)
@@ -62,18 +63,15 @@ In this part of the tutorial you will learn how to setup and configure your SAP 
 
 ## Further Information
 
+Link to blog post etc.
+
 ## Disclaimers:
 - The author does not have a complete picture of all functional / non-functional requirements of the solution, e.g., legal requirements
 - The concept is not meant to compete with the Microsoft PowerApps based solution built for the SAP Pandemic Taskforce.
 - The concept tries to implement an easier workflow for the end-users of the solution (SAP employees, Pandemic Taskforce staff) than provided with the MS PowerApps based solution).
 
-
-## Requirements
-
-## Download and Installation
-
 ## Known Issues
-<!-- You may simply state "No known issues. -->
+No known issues.
 
 ## How to obtain support
 [Create an issue](https://github.com/SAP-samples/<repository-name>/issues) in this repository if you find a bug or have questions about the content.
