@@ -1,23 +1,6 @@
 # Office Access - Covid Check app for SAP AppGyver
 
-Concept of COVID-19 Check related to the “obligation to work from home and entering SAP’s workplaces” requirement.
-This repository contains code samples and step by step instructions to enable *......*. 
-
-## Description
-
-The current COVID-19 pandemic has a big impact and implications on everyone’s personal life. Changing regulations and rules demand flexibility and often require new ways of doing things.
-But this does not stop in private life, frequently changing legal regulations have to implemented by enterprises and institutions on short notice making it hard to come up with nicely automated solutions that integrate with enterprise’s often complex IT-environments; not to forget compliance and data protection requirements.
-Sounds like a promising and compelling use case for testing a Low Code / No Code approach, doesn’t it?
-
-
-### Current Position - What is the challenge?
-(Max & Uwe)
-
-### Destination - What is the outcome?
-(Max & Uwe)
-
-### How You Get There - What is the solution?
-(Max & Uwe)
+Description by Jim missing :-)
 
 ![architecture](./tutorials/0_General/images/architecture.png)
 
