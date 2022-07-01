@@ -34,13 +34,13 @@ class CovidCertificateVerifier {
         const decodedb45 = base45.decode(base45data)
         if (decodedb45.length == 0) {
             console.error("cannot base45decode string")
-            throw new CertificateVerificationException("certificate not valid yet")
+            throw new CertificateVerificationException("technically invalid certificate")
         }
 
         const coseRaw = pako.inflate(decodedb45)
         if (!coseRaw) {
             console.error("cannot inflate string")
-            throw new CertificateVerificationException("certificate not valid yet")
+            throw new CertificateVerificationException("technically invalid certificate")
         }
 
         const message = cbor.decodeFirstSync(coseRaw)
