@@ -68,9 +68,11 @@ In this part of the tutorial you will learn how to setup and configure your SAP 
 ## Further Information
 
 * Blog Post on the SAP Community about the entire sample app: [*"Validate Covid Certificates using SAP AppGyver, SAP BTP and OpenSource – A Sample App"*](https://blogs.sap.com/?p=1544180)
-* Central Validation Rules: 
-* Central Keys to verify Covid Certificates: 
+* Central Covid Certificate Validation Rules: https://distribution.dcc-rules.de/rules
+* Digital Signing Certificate for Covid Certificates: https://de.dscg.ubirch.com/trustList/DSC/
 * Blog Post on the SAP Community about PKCE in SAP AppGyver: [*SAP AppGyver and Proof Key for Code Exchange (PKCE) or “Striving for enterprise-grade security in SAP low-code applications”*](https://blogs.sap.com/2022/03/22/sap-appgyver-and-proof-key-for-code-exchange-pkce-or-striving-for-enterprise-grade-security-in-sap-low-code-applications/)
+* [Technical Specifications
+for EU Digital COVID Certificates](https://health.ec.europa.eu/system/files/2022-02/eu-dcc_validation-rules_en.pdf)
 ## Disclaimers:
 - The author does not have a complete picture of all functional / non-functional requirements of the solution, e.g., legal requirements
 
