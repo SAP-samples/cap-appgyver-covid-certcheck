@@ -67,12 +67,12 @@ In this part of the tutorial you will learn how to setup and configure your SAP 
 
 ## Further Information
 
-Link to blog post etc.
-
+* Blog Post on the SAP Community about the entire sample app: [*"Validate Covid Certificates using SAP AppGyver, SAP BTP and OpenSource – A Sample App"*](https://blogs.sap.com/?p=1544180)
+* Central Validation Rules: 
+* Central Keys to verify Covid Certificates: 
+* Blog Post on the SAP Community about PKCE in SAP AppGyver: [*SAP AppGyver and Proof Key for Code Exchange (PKCE) or “Striving for enterprise-grade security in SAP low-code applications”*](https://blogs.sap.com/2022/03/22/sap-appgyver-and-proof-key-for-code-exchange-pkce-or-striving-for-enterprise-grade-security-in-sap-low-code-applications/)
 ## Disclaimers:
 - The author does not have a complete picture of all functional / non-functional requirements of the solution, e.g., legal requirements
-- The concept is not meant to compete with the Microsoft PowerApps based solution built for the SAP Pandemic Taskforce.
-- The concept tries to implement an easier workflow for the end-users of the solution such as SAP employees, Pandemic Taskforce, and other staff.
 
 ## Known Issues
 No known issues.
