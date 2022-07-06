@@ -68,7 +68,7 @@ Link to blog post etc.
 ## Disclaimers:
 - The author does not have a complete picture of all functional / non-functional requirements of the solution, e.g., legal requirements
 - The concept is not meant to compete with the Microsoft PowerApps based solution built for the SAP Pandemic Taskforce.
-- The concept tries to implement an easier workflow for the end-users of the solution (SAP employees, Pandemic Taskforce staff) than provided with the MS PowerApps based solution).
+- The concept tries to implement an easier workflow for the end-users of the solution such as SAP employees, Pandemic Taskforce, and other staff.
 
 ## Known Issues
 No known issues.
