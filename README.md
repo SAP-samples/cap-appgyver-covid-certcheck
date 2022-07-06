@@ -1,5 +1,5 @@
 # Office Access - Covid Check app for SAP AppGyver
-This repository contains a sample application for the submission, validation, and associated workflow of restricting or permitting building entry to an employee, based on the validity of their Covid Certificate. It focuses on the use of SAP BTP components such as SAP AppGyver, SAP Cloud Application Programming, and SAP Graph to demonstrate the end to end process.
+This repository contains a sample application for the submission, validation, and associated workflow of restricting or permitting building entry to an employee, based on the validity of their Covid Certificate. It focuses on use of SAP Business Technology Platform (BTP) components such as SAP AppGyver, SAP Cloud Application Programming, and SAP Graph, working together to demonstrate the end to end process.
 <!-- Please include descriptive title -->
 
 <!--- Register repository https://api.reuse.software/register, then add REUSE badge:
@@ -7,7 +7,11 @@ This repository contains a sample application for the submission, validation, an
 -->
 
 ## Description
-Text Jim :-)
+The COVID-19 pandemic created far-reaching impacts and disruption to nearly every facet of public life. One example was embodied in the return to work process, where companies needed to minimize risk to their returning onsite employees, while protecting their own business interest from widespread community transmission.
+
+In many countries, verification of vaccination or recovery is provided in a so-called ["Covid Certificate"](https://ec.europa.eu/info/live-work-travel-eu/coronavirus-response/safe-covid-19-vaccines-europeans/eu-digital-covid-certificate_en) containing personal information and dates that confirm the holder is protected from the virus and thus able to safely enter the work facility. Implementing this process of verification at scale is both daunting and time consuming, and frequently requires manual steps by the submitting employee as well as a facilities person to approve or deny the building access.
+
+The application in this repository illustrates how various components of SAP BTP can be utilized together to provide an automated and intelligent workflow enabling submission, enrichment, and approval of the employee's Covid Certificate, resulting in a secure and nearly frictionless process. 
 <!-- Please include SEO-friendly description -->
 
 ![architecture](./tutorials/0_General/images/architecture.png)
