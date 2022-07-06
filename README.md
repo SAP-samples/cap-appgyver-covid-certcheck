@@ -1,5 +1,5 @@
 # Office Access - Covid Check app for SAP AppGyver
-TEXT JIM :-)
+This repository contains a sample application for the submission, validation, and associated workflow of restricting or permitting building entry to an employee, based on the validity of their Covid Certificate. It focuses on the use of SAP BTP components such as SAP AppGyver, SAP Cloud Application Programming, and SAP Graph to demonstrate the end to end process.
 <!-- Please include descriptive title -->
 
 <!--- Register repository https://api.reuse.software/register, then add REUSE badge:
