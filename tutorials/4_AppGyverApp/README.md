@@ -684,5 +684,6 @@ You can launch your app initially from the **Launch** tab. Therefore we recommen
 
 ![AppGyver](./images/image13.png)
 
-If you want to get the full picture about the entire solution, please read the corresponding blog post. TODO LINK 
+
+If you want to get the full picture about the entire sample app, please read the corresponding [blog post](https://blogs.sap.com/?p=1544180).
 
