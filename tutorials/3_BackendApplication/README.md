@@ -1,9 +1,3 @@
-1. Create Destinations
-2. Subscribe to SAP Business Application Studio
-3. Clone repository
-4. Build 
-5. Deploy 
-
 # CAP Application - Covid Check
 
 # Introduction
@@ -92,6 +86,6 @@ In addition, the applications connect to the microservice provided in the previo
 
 Congratulations. You should now have a CAP app deployed in SAP BTP, Cloud Foundry runtime, utilizing the the EmployeeLookupService and some OpenSource packages to validate and verifiy Covid Certificates. The application receives requests from an SAP AppGyver app that is described in the following step. 
 
-If you want to get the full picture about the entire solution, please read the corresponding blog post. TODO LINK 
+If you want to get the full picture about the entire sample app, please read the corresponding [blog post](https://blogs.sap.com/?p=1544180).
 
 
