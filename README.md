@@ -1,6 +1,6 @@
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/cap-appgyver-covid-certcheck)](https://api.reuse.software/info/github.com/SAP-samples/cap-appgyver-covid-certcheck)
 
-# Office Access - Covid Check app for SAP AppGyver
+# Validate Covid Certificates using SAP AppGyver, SAP BTP and OpenSource - A Sample App
 This repository contains a sample application for the submission, validation, and associated workflow of restricting or permitting building entry to an employee, based on the validity of their Covid Certificate. It focuses on use of SAP Business Technology Platform (BTP) components such as SAP AppGyver, SAP Cloud Application Programming, and SAP Graph, working together to demonstrate the end to end process.
 <!-- Please include descriptive title -->
 
